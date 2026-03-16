@@ -21,7 +21,7 @@ cmd_start() {
 
   elapsed=0
   last_line=""
-  while [ $elapsed -lt 120000 ]; do
+  while [ $elapsed -lt 180000 ]; do
     sleep 0.5
     elapsed=$((elapsed + 500))
     if is_running; then
@@ -37,7 +37,7 @@ cmd_start() {
     fi
   done
 
-  echo "NAWS failed to start within 120s. Check $LOG"
+  echo "NAWS failed to start within 180s. Check $LOG"
   exit 1
 }
 
