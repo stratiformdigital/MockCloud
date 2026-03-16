@@ -28,6 +28,13 @@ cmd_start() {
       echo "NAWS ready (${elapsed}ms)"
       return
     fi
+    if [ -f "$LOG" ]; then
+      line=$(tail -1 "$LOG")
+      if [ -n "$line" ] && [ "$line" != "$last_line" ]; then
+        echo "  $line"
+        last_line="$line"
+      fi
+    fi
   done
 
   echo "NAWS failed to start within 120s. Check $LOG"

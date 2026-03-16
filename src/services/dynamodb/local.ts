@@ -81,8 +81,8 @@ export async function startDynamoLocal(): Promise<void> {
     stdio: ['ignore', 'pipe', 'pipe'],
   });
 
-  proc.stdout!.on('data', (data: Buffer) => info(data.toString().trimEnd()));
-  proc.stderr!.on('data', (data: Buffer) => info(data.toString().trimEnd()));
+  proc.stdout!.resume();
+  proc.stderr!.resume();
 
   proc.on('exit', (code, signal) => {
     if (proc) {
