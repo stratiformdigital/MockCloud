@@ -4,28 +4,28 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { ServerConfig } from './types.js';
 import { createRouter } from './router.js';
-import { createNawsConsoleMiddleware } from './naws-console.js';
+import { createMockCloudConsoleMiddleware } from './mockcloud-console.js';
 import { info } from './util/logger.js';
 import { setBaseUrl } from './server-url.js';
 import { startDynamoLocal, stopDynamoLocal } from './services/dynamodb/local.js';
 import { getAllMockServices } from './services/registry.js';
 
-export const PID_FILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../data/naws.pid');
+export const PID_FILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../data/mockcloud.pid');
 
 export async function startServer(config: ServerConfig): Promise<void> {
   if (existsSync(PID_FILE)) {
     const pid = parseInt(readFileSync(PID_FILE, 'utf-8').trim(), 10);
     try {
       process.kill(pid, 0);
-      throw new Error(`NAWS is already running (PID ${pid}). Run "yarn tsx src/cli.ts stop" first.`);
+      throw new Error(`MockCloud is already running (PID ${pid}). Run "yarn tsx src/cli.ts stop" first.`);
     } catch (err) {
-      if (err instanceof Error && err.message.startsWith('NAWS is already')) throw err;
+      if (err instanceof Error && err.message.startsWith('MockCloud is already')) throw err;
       unlinkSync(PID_FILE);
     }
   }
 
-  const nawsConsoleMiddleware = createNawsConsoleMiddleware();
-  const handleRequest = createRouter(config, [nawsConsoleMiddleware]);
+  const consoleMiddleware = createMockCloudConsoleMiddleware();
+  const handleRequest = createRouter(config, [consoleMiddleware]);
 
   setBaseUrl(`http://localhost:${config.port}`);
 
@@ -59,9 +59,9 @@ export async function startServer(config: ServerConfig): Promise<void> {
   return new Promise<void>((resolve) => {
     server.listen(config.port, () => {
       const serviceCount = getAllMockServices().length;
-      info(`NAWS Server running at http://localhost:${config.port}`);
+      info(`MockCloud Server running at http://localhost:${config.port}`);
       info(`Region: ${config.region}, ${serviceCount} services`);
-      info(`  AWS CLI: aws --profile naws <service> <command>`);
+      info(`  AWS CLI: aws --profile mockcloud <service> <command>`);
       writeFileSync(PID_FILE, String(process.pid));
       resolve();
     });

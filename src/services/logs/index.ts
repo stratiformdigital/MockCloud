@@ -286,7 +286,7 @@ function TagResource(req: ParsedApiRequest): ApiResponse {
 }
 
 function StartQuery(_req: ParsedApiRequest): ApiResponse {
-  return json({ queryId: 'naws-query-1' });
+  return json({ queryId: 'mockcloud-query-1' });
 }
 
 function StopQuery(_req: ParsedApiRequest): ApiResponse {

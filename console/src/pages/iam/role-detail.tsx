@@ -1,18 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Header from '@cloudscape-design/components/header';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Tabs from '@cloudscape-design/components/tabs';
-import Table from '@cloudscape-design/components/table';
-import Box from '@cloudscape-design/components/box';
-import Spinner from '@cloudscape-design/components/spinner';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import Textarea from '@cloudscape-design/components/textarea';
-import Flashbar from '@cloudscape-design/components/flashbar';
+import { ChalkHeader, ChalkBreadcrumbs, ChalkSpaceBetween, ChalkTabs, ChalkTable, ChalkBox, ChalkSpinner, ChalkButton, ChalkModal, ChalkFormField, ChalkInput, ChalkTextarea, ChalkFlashbar } from '../../chalk';
 import {
   GetRoleCommand,
   ListAttachedRolePoliciesCommand,
@@ -203,16 +191,16 @@ export default function RoleDetail() {
     }
   };
 
-  if (loading) return <Spinner size="large" />;
+  if (loading) return <ChalkSpinner size="large" />;
 
   const trustPolicy = role?.AssumeRolePolicyDocument
     ? JSON.stringify(JSON.parse(decodeURIComponent(role.AssumeRolePolicyDocument)), null, 2)
     : '{}';
 
   return (
-    <SpaceBetween size="l">
+    <ChalkSpaceBetween size="l">
       {flash.length > 0 && (
-        <Flashbar
+        <ChalkFlashbar
           items={flash.map((f, i) => ({
             type: f.type,
             content: f.content,
@@ -223,63 +211,62 @@ export default function RoleDetail() {
         />
       )}
 
-      <BreadcrumbGroup
+      <ChalkBreadcrumbs
         items={[
-          { text: 'NAWS', href: '/' },
+          { text: 'MockCloud', href: '/' },
           { text: 'IAM', href: '/iam' },
           { text: 'Roles', href: '/iam' },
           { text: roleName!, href: '#' },
         ]}
-        onFollow={(e) => {
-          e.preventDefault();
-          if (e.detail.href !== '#') navigate(e.detail.href);
+        onNavigate={(href) => {
+          if (href !== '#') navigate(href);
         }}
       />
 
-      <Header
+      <ChalkHeader
         variant="h1"
         actions={
-          <Button onClick={() => setShowDeleteRole(true)}>Delete</Button>
+          <ChalkButton onClick={() => setShowDeleteRole(true)}>Delete</ChalkButton>
         }
       >
         {roleName}
-      </Header>
+      </ChalkHeader>
 
-      <Tabs
+      <ChalkTabs
         tabs={[
           {
             id: 'trust',
             label: 'Trust Policy',
             content: (
-              <SpaceBetween size="m">
-                <Box float="right">
-                  <Button onClick={() => { setTrustPolicyDraft(trustPolicy); setShowEditTrust(true); }}>
+              <ChalkSpaceBetween size="m">
+                <ChalkBox float="right">
+                  <ChalkButton onClick={() => { setTrustPolicyDraft(trustPolicy); setShowEditTrust(true); }}>
                     Edit trust policy
-                  </Button>
-                </Box>
-                <Box padding="l">
+                  </ChalkButton>
+                </ChalkBox>
+                <ChalkBox padding="l">
                   <pre style={{ background: '#1a1a2e', color: '#e0e0e0', padding: '16px', borderRadius: '8px', overflow: 'auto', fontSize: '13px' }}>
                     {trustPolicy}
                   </pre>
-                </Box>
-              </SpaceBetween>
+                </ChalkBox>
+              </ChalkSpaceBetween>
             ),
           },
           {
             id: 'permissions',
             label: 'Permissions',
             content: (
-              <SpaceBetween size="l">
-                <Table
+              <ChalkSpaceBetween size="l">
+                <ChalkTable
                   header={
-                    <Header
+                    <ChalkHeader
                       counter={`(${attachedPolicies.length})`}
                       actions={
-                        <Button onClick={() => setShowAttach(true)}>Attach policy</Button>
+                        <ChalkButton onClick={() => setShowAttach(true)}>Attach policy</ChalkButton>
                       }
                     >
                       Attached Policies
-                    </Header>
+                    </ChalkHeader>
                   }
                   items={attachedPolicies}
                   columnDefinitions={[
@@ -297,28 +284,28 @@ export default function RoleDetail() {
                       id: 'actions',
                       header: 'Actions',
                       cell: (item) => (
-                        <Button variant="inline-link" onClick={() => setDetachPolicy(item)}>
+                        <ChalkButton variant="inline-link" onClick={() => setDetachPolicy(item)}>
                           Detach
-                        </Button>
+                        </ChalkButton>
                       ),
                     },
                   ]}
                   empty={
-                    <Box textAlign="center" color="inherit">
+                    <ChalkBox textAlign="center" color="inherit">
                       <b>No attached policies</b>
-                    </Box>
+                    </ChalkBox>
                   }
                 />
-                <Table
+                <ChalkTable
                   header={
-                    <Header
+                    <ChalkHeader
                       counter={`(${inlinePolicies.length})`}
                       actions={
-                        <Button onClick={() => setShowCreateInline(true)}>Create inline policy</Button>
+                        <ChalkButton onClick={() => setShowCreateInline(true)}>Create inline policy</ChalkButton>
                       }
                     >
                       Inline Policies
-                    </Header>
+                    </ChalkHeader>
                   }
                   items={inlinePolicies.map((name) => ({ name }))}
                   columnDefinitions={[
@@ -326,206 +313,206 @@ export default function RoleDetail() {
                       id: 'name',
                       header: 'Policy Name',
                       cell: (item) => (
-                        <Button variant="inline-link" onClick={() => handleViewInlinePolicy(item.name)}>
+                        <ChalkButton variant="inline-link" onClick={() => handleViewInlinePolicy(item.name)}>
                           {item.name}
-                        </Button>
+                        </ChalkButton>
                       ),
                     },
                     {
                       id: 'actions',
                       header: 'Actions',
                       cell: (item) => (
-                        <Button variant="inline-link" onClick={() => setDeleteInlinePolicy(item.name)}>
+                        <ChalkButton variant="inline-link" onClick={() => setDeleteInlinePolicy(item.name)}>
                           Delete
-                        </Button>
+                        </ChalkButton>
                       ),
                     },
                   ]}
                   empty={
-                    <Box textAlign="center" color="inherit">
+                    <ChalkBox textAlign="center" color="inherit">
                       <b>No inline policies</b>
-                    </Box>
+                    </ChalkBox>
                   }
                 />
-              </SpaceBetween>
+              </ChalkSpaceBetween>
             ),
           },
         ]}
       />
 
-      <Modal
+      <ChalkModal
         visible={showDeleteRole}
         onDismiss={() => setShowDeleteRole(false)}
         header="Delete role"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowDeleteRole(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowDeleteRole(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDeleteRole} loading={deletingRole}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDeleteRole} loading={deletingRole}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{roleName}</b>?
-      </Modal>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showAttach}
         onDismiss={() => setShowAttach(false)}
         header="Attach policy"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowAttach(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowAttach(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleAttach} loading={attaching} disabled={!attachArn}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleAttach} loading={attaching} disabled={!attachArn}>
                 Attach
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <FormField label="Policy ARN">
-          <Input
+        <ChalkFormField label="Policy ARN">
+          <ChalkInput
             value={attachArn}
             onChange={({ detail }) => setAttachArn(detail.value)}
             placeholder="arn:aws:iam::aws:policy/..."
           />
-        </FormField>
-      </Modal>
+        </ChalkFormField>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={detachPolicy !== null}
         onDismiss={() => setDetachPolicy(null)}
         header="Detach policy"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDetachPolicy(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDetachPolicy(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDetach} loading={detaching}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDetach} loading={detaching}>
                 Detach
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to detach <b>{detachPolicy?.PolicyName}</b>?
-      </Modal>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showEditTrust}
         onDismiss={() => setShowEditTrust(false)}
         header="Edit trust policy"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowEditTrust(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowEditTrust(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleEditTrust} loading={savingTrust}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleEditTrust} loading={savingTrust}>
                 Update
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <FormField label="Trust policy document">
-          <Textarea
+        <ChalkFormField label="Trust policy document">
+          <ChalkTextarea
             value={trustPolicyDraft}
             onChange={({ detail }) => setTrustPolicyDraft(detail.value)}
             rows={16}
           />
-        </FormField>
-      </Modal>
+        </ChalkFormField>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showCreateInline}
         onDismiss={() => setShowCreateInline(false)}
         header="Create inline policy"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowCreateInline(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowCreateInline(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleCreateInline} loading={creatingInline} disabled={!inlinePolicyName}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleCreateInline} loading={creatingInline} disabled={!inlinePolicyName}>
                 Create
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="m">
-          <FormField label="Policy name">
-            <Input
+        <ChalkSpaceBetween size="m">
+          <ChalkFormField label="Policy name">
+            <ChalkInput
               value={inlinePolicyName}
               onChange={({ detail }) => setInlinePolicyName(detail.value)}
             />
-          </FormField>
-          <FormField label="Policy document">
-            <Textarea
+          </ChalkFormField>
+          <ChalkFormField label="Policy document">
+            <ChalkTextarea
               value={inlinePolicyDoc}
               onChange={({ detail }) => setInlinePolicyDoc(detail.value)}
               rows={16}
             />
-          </FormField>
-        </SpaceBetween>
-      </Modal>
+          </ChalkFormField>
+        </ChalkSpaceBetween>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={viewInlinePolicy !== null}
         onDismiss={() => setViewInlinePolicy(null)}
         header={viewInlinePolicy}
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setViewInlinePolicy(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setViewInlinePolicy(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleSaveInlinePolicy} loading={savingInlinePolicy} disabled={loadingInlinePolicy}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleSaveInlinePolicy} loading={savingInlinePolicy} disabled={loadingInlinePolicy}>
                 Save
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        {loadingInlinePolicy ? <Spinner /> : (
-          <FormField label="Policy document">
-            <Textarea
+        {loadingInlinePolicy ? <ChalkSpinner /> : (
+          <ChalkFormField label="Policy document">
+            <ChalkTextarea
               value={viewInlinePolicyDoc}
               onChange={({ detail }) => setViewInlinePolicyDoc(detail.value)}
               rows={16}
             />
-          </FormField>
+          </ChalkFormField>
         )}
-      </Modal>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={deleteInlinePolicy !== null}
         onDismiss={() => setDeleteInlinePolicy(null)}
         header="Delete inline policy"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeleteInlinePolicy(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDeleteInlinePolicy(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDeleteInlinePolicy} loading={deletingInlinePolicy}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDeleteInlinePolicy} loading={deletingInlinePolicy}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{deleteInlinePolicy}</b>?
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

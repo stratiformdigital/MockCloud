@@ -1,6 +1,6 @@
 // Preload script for Lambda subprocesses.
 // CDK custom resource framework hardcodes require("https") to send
-// CloudFormation responses via https.request(). When NAWS runs plain HTTP,
+// CloudFormation responses via https.request(). When MockCloud runs plain HTTP,
 // those calls fail with ECONNREFUSED. This patches https.request/get to
 // delegate to http when the target is localhost.
 //

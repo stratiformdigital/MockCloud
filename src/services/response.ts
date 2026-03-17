@@ -10,7 +10,7 @@ export class ServiceError extends Error {
   }
 }
 
-// application/json (Lambda, API Gateway, console-nav, console-control, resource-explorer, unified-search)
+// application/json (Lambda, API Gateway, etc.)
 export const json = (data: unknown, statusCode = 200): ApiResponse => ({
   statusCode,
   headers: { 'Content-Type': 'application/json' },

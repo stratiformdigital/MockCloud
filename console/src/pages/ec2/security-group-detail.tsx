@@ -1,21 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Header from '@cloudscape-design/components/header';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Container from '@cloudscape-design/components/container';
-import KeyValuePairs from '@cloudscape-design/components/key-value-pairs';
-import Tabs from '@cloudscape-design/components/tabs';
-import Table from '@cloudscape-design/components/table';
-import Box from '@cloudscape-design/components/box';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import Select from '@cloudscape-design/components/select';
-import Spinner from '@cloudscape-design/components/spinner';
-import Link from '@cloudscape-design/components/link';
-import Flashbar from '@cloudscape-design/components/flashbar';
+import {
+  ChalkHeader, ChalkBreadcrumbs, ChalkSpaceBetween, ChalkContainer,
+  ChalkKeyValuePairs, ChalkTabs, ChalkTable, ChalkBox, ChalkButton,
+  ChalkModal, ChalkFormField, ChalkInput, ChalkSelect, ChalkSpinner,
+  ChalkLink, ChalkFlashbar,
+} from '../../chalk';
 import {
   DescribeSecurityGroupsCommand,
   AuthorizeSecurityGroupIngressCommand,
@@ -205,25 +195,25 @@ export default function SecurityGroupDetail() {
     }
   };
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Header variant="h1">Error: {error}</Header>;
-  if (!sg) return <Header variant="h1">Security group not found</Header>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkHeader variant="h1">Error: {error}</ChalkHeader>;
+  if (!sg) return <ChalkHeader variant="h1">Security group not found</ChalkHeader>;
 
   const isInboundAllTraffic = inboundProtocol.value === '-1';
   const isOutboundAllTraffic = outboundProtocol.value === '-1';
 
   function inboundRulesTable(permissions: IpPermission[]) {
     return (
-      <Table
+      <ChalkTable
         header={
-          <Header
+          <ChalkHeader
             counter={`(${permissions.length})`}
             actions={
-              <Button onClick={() => setShowAddInbound(true)}>Add inbound rule</Button>
+              <ChalkButton onClick={() => setShowAddInbound(true)}>Add inbound rule</ChalkButton>
             }
           >
             Inbound Rules
-          </Header>
+          </ChalkHeader>
         }
         items={permissions}
         columnDefinitions={[
@@ -246,14 +236,14 @@ export default function SecurityGroupDetail() {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <Link onFollow={() => setRevokeTarget({ direction: 'inbound', perm: item })}>Revoke</Link>
+              <ChalkLink onFollow={() => setRevokeTarget({ direction: 'inbound', perm: item })}>Revoke</ChalkLink>
             ),
           },
         ]}
         empty={
-          <Box textAlign="center" color="inherit">
+          <ChalkBox textAlign="center" color="inherit">
             <b>No rules</b>
-          </Box>
+          </ChalkBox>
         }
       />
     );
@@ -261,16 +251,16 @@ export default function SecurityGroupDetail() {
 
   function outboundRulesTable(permissions: IpPermission[]) {
     return (
-      <Table
+      <ChalkTable
         header={
-          <Header
+          <ChalkHeader
             counter={`(${permissions.length})`}
             actions={
-              <Button onClick={() => setShowAddOutbound(true)}>Add outbound rule</Button>
+              <ChalkButton onClick={() => setShowAddOutbound(true)}>Add outbound rule</ChalkButton>
             }
           >
             Outbound Rules
-          </Header>
+          </ChalkHeader>
         }
         items={permissions}
         columnDefinitions={[
@@ -293,23 +283,23 @@ export default function SecurityGroupDetail() {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <Link onFollow={() => setRevokeTarget({ direction: 'outbound', perm: item })}>Revoke</Link>
+              <ChalkLink onFollow={() => setRevokeTarget({ direction: 'outbound', perm: item })}>Revoke</ChalkLink>
             ),
           },
         ]}
         empty={
-          <Box textAlign="center" color="inherit">
+          <ChalkBox textAlign="center" color="inherit">
             <b>No rules</b>
-          </Box>
+          </ChalkBox>
         }
       />
     );
   }
 
   return (
-    <SpaceBetween size="l">
+    <ChalkSpaceBetween size="l">
       {flash.length > 0 && (
-        <Flashbar
+        <ChalkFlashbar
           items={flash.map((f, i) => ({
             type: f.type,
             content: f.content,
@@ -320,28 +310,27 @@ export default function SecurityGroupDetail() {
         />
       )}
 
-      <BreadcrumbGroup
+      <ChalkBreadcrumbs
         items={[
-          { text: 'NAWS', href: '/' },
+          { text: 'MockCloud', href: '/' },
           { text: 'EC2', href: '/ec2' },
           { text: 'Security Groups', href: '/ec2' },
           { text: groupId!, href: '#' },
         ]}
-        onFollow={(e) => {
-          e.preventDefault();
-          if (e.detail.href !== '#') navigate(e.detail.href);
+        onNavigate={(href) => {
+          if (href !== '#') navigate(href);
         }}
       />
-      <Header
+      <ChalkHeader
         variant="h1"
         actions={
-          <Button onClick={() => setShowDelete(true)}>Delete</Button>
+          <ChalkButton onClick={() => setShowDelete(true)}>Delete</ChalkButton>
         }
       >
         {sg.GroupName ?? groupId}
-      </Header>
-      <Container header={<Header variant="h2">Details</Header>}>
-        <KeyValuePairs
+      </ChalkHeader>
+      <ChalkContainer header={<ChalkHeader variant="h2">Details</ChalkHeader>}>
+        <ChalkKeyValuePairs
           columns={2}
           items={[
             { label: 'Group ID', value: sg.GroupId ?? '-' },
@@ -350,8 +339,8 @@ export default function SecurityGroupDetail() {
             { label: 'Description', value: sg.Description ?? '-' },
           ]}
         />
-      </Container>
-      <Tabs
+      </ChalkContainer>
+      <ChalkTabs
         tabs={[
           {
             id: 'inbound',
@@ -366,126 +355,126 @@ export default function SecurityGroupDetail() {
         ]}
       />
 
-      <Modal
+      <ChalkModal
         visible={showAddInbound}
         onDismiss={() => setShowAddInbound(false)}
         header="Add inbound rule"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowAddInbound(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowAddInbound(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleAddInbound} loading={addingInbound} disabled={!inboundCidr || (!isInboundAllTraffic && !inboundPortRange)}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleAddInbound} loading={addingInbound} disabled={!inboundCidr || (!isInboundAllTraffic && !inboundPortRange)}>
                 Add rule
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="m">
-          <FormField label="Protocol">
-            <Select
+        <ChalkSpaceBetween size="m">
+          <ChalkFormField label="Protocol">
+            <ChalkSelect
               selectedOption={inboundProtocol}
               onChange={({ detail }) => setInboundProtocol(detail.selectedOption as typeof inboundProtocol)}
               options={PROTOCOL_OPTIONS}
             />
-          </FormField>
+          </ChalkFormField>
           {!isInboundAllTraffic && (
-            <FormField label="Port Range">
-              <Input value={inboundPortRange} onChange={({ detail }) => setInboundPortRange(detail.value)} placeholder="443 or 8000-9000" />
-            </FormField>
+            <ChalkFormField label="Port Range">
+              <ChalkInput value={inboundPortRange} onChange={({ detail }) => setInboundPortRange(detail.value)} placeholder="443 or 8000-9000" />
+            </ChalkFormField>
           )}
-          <FormField label="Source CIDR">
-            <Input value={inboundCidr} onChange={({ detail }) => setInboundCidr(detail.value)} placeholder="0.0.0.0/0" />
-          </FormField>
-        </SpaceBetween>
-      </Modal>
+          <ChalkFormField label="Source CIDR">
+            <ChalkInput value={inboundCidr} onChange={({ detail }) => setInboundCidr(detail.value)} placeholder="0.0.0.0/0" />
+          </ChalkFormField>
+        </ChalkSpaceBetween>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showAddOutbound}
         onDismiss={() => setShowAddOutbound(false)}
         header="Add outbound rule"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowAddOutbound(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowAddOutbound(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleAddOutbound} loading={addingOutbound} disabled={!outboundCidr || (!isOutboundAllTraffic && !outboundPortRange)}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleAddOutbound} loading={addingOutbound} disabled={!outboundCidr || (!isOutboundAllTraffic && !outboundPortRange)}>
                 Add rule
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="m">
-          <FormField label="Protocol">
-            <Select
+        <ChalkSpaceBetween size="m">
+          <ChalkFormField label="Protocol">
+            <ChalkSelect
               selectedOption={outboundProtocol}
               onChange={({ detail }) => setOutboundProtocol(detail.selectedOption as typeof outboundProtocol)}
               options={PROTOCOL_OPTIONS}
             />
-          </FormField>
+          </ChalkFormField>
           {!isOutboundAllTraffic && (
-            <FormField label="Port Range">
-              <Input value={outboundPortRange} onChange={({ detail }) => setOutboundPortRange(detail.value)} placeholder="443 or 8000-9000" />
-            </FormField>
+            <ChalkFormField label="Port Range">
+              <ChalkInput value={outboundPortRange} onChange={({ detail }) => setOutboundPortRange(detail.value)} placeholder="443 or 8000-9000" />
+            </ChalkFormField>
           )}
-          <FormField label="Destination CIDR">
-            <Input value={outboundCidr} onChange={({ detail }) => setOutboundCidr(detail.value)} placeholder="0.0.0.0/0" />
-          </FormField>
-        </SpaceBetween>
-      </Modal>
+          <ChalkFormField label="Destination CIDR">
+            <ChalkInput value={outboundCidr} onChange={({ detail }) => setOutboundCidr(detail.value)} placeholder="0.0.0.0/0" />
+          </ChalkFormField>
+        </ChalkSpaceBetween>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={revokeTarget !== null}
         onDismiss={() => setRevokeTarget(null)}
         header={`Revoke ${revokeTarget?.direction} rule`}
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setRevokeTarget(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setRevokeTarget(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleRevoke} loading={revoking}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleRevoke} loading={revoking}>
                 Revoke
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to revoke this {revokeTarget?.direction} rule?
         {revokeTarget && (
-          <Box margin={{ top: 's' }}>
+          <ChalkBox margin={{ top: 's' }}>
             <b>Protocol:</b> {revokeTarget.perm.IpProtocol === '-1' ? 'All' : revokeTarget.perm.IpProtocol}
             {' | '}
             <b>Port Range:</b> {formatPortRange(revokeTarget.perm)}
             {' | '}
             <b>{revokeTarget.direction === 'inbound' ? 'Source' : 'Destination'}:</b> {formatSource(revokeTarget.perm)}
-          </Box>
+          </ChalkBox>
         )}
-      </Modal>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showDelete}
         onDismiss={() => setShowDelete(false)}
         header="Delete security group"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowDelete(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowDelete(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} loading={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{sg.GroupName}</b> ({sg.GroupId})? This will navigate back to the security groups list.
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

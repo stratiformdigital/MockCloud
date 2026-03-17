@@ -94,7 +94,7 @@ export function createRouter(
 
     const isApiProxyPath = pathname.startsWith('/api/');
     const authHeader = typeof req.headers['authorization'] === 'string' ? req.headers['authorization'] : '';
-    if (!isApiProxyPath && !pathname.startsWith('/console-api/') && !pathname.startsWith('/papi/') && pathname !== '/proxycheck' && authHeader.startsWith('AWS4-HMAC-SHA256 ')) {
+    if (!isApiProxyPath && authHeader.startsWith('AWS4-HMAC-SHA256 ')) {
       await handleCliRequest(req, res, authHeader, signingLookup);
       return;
     }

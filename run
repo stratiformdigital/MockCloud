@@ -3,7 +3,7 @@ set -eu -o pipefail
 cd "$(dirname "$0")"
 
 PORT=4444
-LOG=data/naws.log
+LOG=data/mockcloud.log
 
 is_running() {
   curl -s "http://localhost:$PORT/" -o /dev/null 2>/dev/null
@@ -11,11 +11,11 @@ is_running() {
 
 cmd_start() {
   if is_running; then
-    echo "NAWS already running on port $PORT"
+    echo "MockCloud already running on port $PORT"
     exit 0
   fi
 
-  echo "Starting NAWS on port $PORT..."
+  echo "Starting MockCloud on port $PORT..."
   mkdir -p data
   nohup yarn tsx src/cli.ts serve > "$LOG" 2>&1 &
 
@@ -25,7 +25,7 @@ cmd_start() {
     sleep 0.5
     elapsed=$((elapsed + 500))
     if is_running; then
-      echo "NAWS ready (${elapsed}ms)"
+      echo "MockCloud ready (${elapsed}ms)"
       return
     fi
     if [ -f "$LOG" ]; then
@@ -37,7 +37,7 @@ cmd_start() {
     fi
   done
 
-  echo "NAWS failed to start within 180s. Check $LOG"
+  echo "MockCloud failed to start within 180s. Check $LOG"
   exit 1
 }
 
@@ -50,7 +50,7 @@ cmd_reset() {
     cmd_stop
     sleep 1
   fi
-  rm -rf data/state data/s3 data/naws.pid data/naws.log
+  rm -rf data/state data/s3 data/mockcloud.pid data/mockcloud.log
   echo "Data cleared."
 }
 
@@ -64,8 +64,8 @@ case "${1:-start}" in
     echo ""
     echo "Usage: ./run <command>"
     echo ""
-    echo "  start   Start NAWS server (default)"
-    echo "  stop    Stop NAWS server"
+    echo "  start   Start MockCloud server (default)"
+    echo "  stop    Stop MockCloud server"
     echo "  reset   Clear all data and stop server"
     echo "  clear   Clear persisted state"
     echo "  serve   Start server in foreground"

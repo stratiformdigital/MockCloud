@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/naws-api': 'http://localhost:4444',
+      '/mockcloud-api': 'http://localhost:4444',
     },
   },
   build: {

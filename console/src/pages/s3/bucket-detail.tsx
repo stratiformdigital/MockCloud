@@ -1,17 +1,6 @@
 import { useState, useEffect, useCallback, useRef, type DragEvent } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Table from '@cloudscape-design/components/table';
-import Header from '@cloudscape-design/components/header';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Link from '@cloudscape-design/components/link';
-import Spinner from '@cloudscape-design/components/spinner';
-import Box from '@cloudscape-design/components/box';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import ProgressBar from '@cloudscape-design/components/progress-bar';
+import { ChalkTable, ChalkHeader, ChalkBreadcrumbs, ChalkSpaceBetween, ChalkLink, ChalkSpinner, ChalkBox, ChalkButton, ChalkModal, ChalkFormField, ChalkInput, ChalkProgressBar } from '../../chalk';
 import {
   ListObjectsV2Command,
   PutObjectCommand,
@@ -251,7 +240,7 @@ export default function BucketDetail() {
   const prefixParts = prefix.split('/').filter(Boolean);
 
   const breadcrumbItems = [
-    { text: 'NAWS', href: '/' },
+    { text: 'MockCloud', href: '/' },
     { text: 'S3', href: '/s3' },
     { text: 'Buckets', href: '/s3' },
     { text: bucketName!, href: `/s3/buckets/${bucketName}` },
@@ -270,8 +259,8 @@ export default function BucketDetail() {
   }
 
   return (
-    <SpaceBetween size="l">
-      <BreadcrumbGroup
+    <ChalkSpaceBetween size="l">
+      <ChalkBreadcrumbs
         items={breadcrumbItems}
         onFollow={(e) => {
           e.preventDefault();
@@ -287,13 +276,13 @@ export default function BucketDetail() {
       />
 
       {prefix && (
-        <Box variant="p" color="text-body-secondary">
+        <ChalkBox variant="p" color="text-body-secondary">
           {bucketName}/{prefix}
-        </Box>
+        </ChalkBox>
       )}
 
       {loading ? (
-        <Spinner size="large" />
+        <ChalkSpinner size="large" />
       ) : (
         <div
           onDragEnter={handleTableDragEnter}
@@ -319,28 +308,28 @@ export default function BucketDetail() {
                 pointerEvents: 'none',
               }}
             >
-              <Box fontSize="heading-m" color="text-status-info" fontWeight="bold">
+              <ChalkBox fontSize="heading-m" color="text-status-info" fontWeight="bold">
                 Drop files to upload
-              </Box>
+              </ChalkBox>
             </div>
           )}
-          <Table
+          <ChalkTable
             header={
-              <Header
+              <ChalkHeader
                 counter={`(${items.length})`}
                 actions={
-                  <SpaceBetween direction="horizontal" size="xs">
-                    <Button onClick={() => setShowDeleteBucket(true)}>
+                  <ChalkSpaceBetween direction="horizontal" size="xs">
+                    <ChalkButton onClick={() => setShowDeleteBucket(true)}>
                       Delete bucket
-                    </Button>
-                    <Button variant="primary" onClick={() => openUploadModal()}>
+                    </ChalkButton>
+                    <ChalkButton variant="primary" onClick={() => openUploadModal()}>
                       Upload
-                    </Button>
-                  </SpaceBetween>
+                    </ChalkButton>
+                  </ChalkSpaceBetween>
                 }
               >
                 Objects
-              </Header>
+              </ChalkHeader>
             }
             items={items}
             columnDefinitions={[
@@ -349,23 +338,23 @@ export default function BucketDetail() {
                 header: 'Key',
                 cell: (item) =>
                   item.isFolder ? (
-                    <Link
+                    <ChalkLink
                       onFollow={(e) => {
                         e.preventDefault();
                         setPrefix(item.key);
                       }}
                     >
                       {item.displayName}
-                    </Link>
+                    </ChalkLink>
                   ) : (
-                    <Link
+                    <ChalkLink
                       onFollow={(e) => {
                         e.preventDefault();
                         handleView(item.key);
                       }}
                     >
                       {item.displayName}
-                    </Link>
+                    </ChalkLink>
                   ),
               },
               {
@@ -388,43 +377,43 @@ export default function BucketDetail() {
                 header: 'Actions',
                 cell: (item) =>
                   item.isFolder ? null : (
-                    <SpaceBetween direction="horizontal" size="xs">
-                      <Button variant="icon" iconName="download" onClick={() => downloadObject(item.key)} />
-                      <Button variant="inline-link" onClick={() => setDeleteKey(item.key)}>
+                    <ChalkSpaceBetween direction="horizontal" size="xs">
+                      <ChalkButton variant="icon" iconName="download" onClick={() => downloadObject(item.key)} />
+                      <ChalkButton variant="inline-link" onClick={() => setDeleteKey(item.key)}>
                         Delete
-                      </Button>
-                    </SpaceBetween>
+                      </ChalkButton>
+                    </ChalkSpaceBetween>
                   ),
               },
             ]}
             empty={
-              <Box textAlign="center" color="inherit">
+              <ChalkBox textAlign="center" color="inherit">
                 <b>No objects</b>
-              </Box>
+              </ChalkBox>
             }
           />
         </div>
       )}
 
-      <Modal
+      <ChalkModal
         visible={showUpload}
         onDismiss={closeUploadModal}
         header="Upload"
         size="medium"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={closeUploadModal}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={closeUploadModal}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleUpload} loading={uploading} disabled={uploadFiles.length === 0}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleUpload} loading={uploading} disabled={uploadFiles.length === 0}>
                 Upload {uploadFiles.length > 0 ? `(${uploadFiles.length})` : ''}
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="m">
+        <ChalkSpaceBetween size="m">
           <input
             ref={fileInputRef}
             type="file"
@@ -452,19 +441,19 @@ export default function BucketDetail() {
               transition: 'border-color 0.15s, background-color 0.15s',
             }}
           >
-            <SpaceBetween size="xs">
-              <Box fontSize="heading-s" color={dropZoneDragOver ? 'text-status-info' : 'text-body-secondary'}>
+            <ChalkSpaceBetween size="xs">
+              <ChalkBox fontSize="heading-s" color={dropZoneDragOver ? 'text-status-info' : 'text-body-secondary'}>
                 Drag files here or click to browse
-              </Box>
-              <Box variant="small" color="text-body-secondary">
+              </ChalkBox>
+              <ChalkBox variant="small" color="text-body-secondary">
                 Multiple files supported
-              </Box>
-            </SpaceBetween>
+              </ChalkBox>
+            </ChalkSpaceBetween>
           </div>
 
           {uploadFiles.length > 0 && (
             <div>
-              <Box variant="h4" margin={{ bottom: 'xs' }}>Files ({uploadFiles.length})</Box>
+              <ChalkBox variant="h4" margin={{ bottom: 'xs' }}>Files ({uploadFiles.length})</ChalkBox>
               <div style={{ maxHeight: '200px', overflow: 'auto' }}>
                 {uploadFiles.map((file, i) => (
                   <div
@@ -477,92 +466,92 @@ export default function BucketDetail() {
                       borderBottom: '1px solid #eaeded',
                     }}
                   >
-                    <SpaceBetween direction="horizontal" size="xs">
-                      <Box>{file.name}</Box>
-                      <Box variant="small" color="text-body-secondary">{formatSize(file.size)}</Box>
-                    </SpaceBetween>
-                    <Button variant="inline-link" onClick={() => removeFile(i)}>Remove</Button>
+                    <ChalkSpaceBetween direction="horizontal" size="xs">
+                      <ChalkBox>{file.name}</ChalkBox>
+                      <ChalkBox variant="small" color="text-body-secondary">{formatSize(file.size)}</ChalkBox>
+                    </ChalkSpaceBetween>
+                    <ChalkButton variant="inline-link" onClick={() => removeFile(i)}>Remove</ChalkButton>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          <FormField label="Key prefix" description={`Files will be uploaded to: ${uploadPrefix}<filename>`}>
-            <Input value={uploadPrefix} onChange={({ detail }) => setUploadPrefix(detail.value)} placeholder="folder/" />
-          </FormField>
+          <ChalkFormField label="Key prefix" description={`Files will be uploaded to: ${uploadPrefix}<filename>`}>
+            <ChalkInput value={uploadPrefix} onChange={({ detail }) => setUploadPrefix(detail.value)} placeholder="folder/" />
+          </ChalkFormField>
 
           {uploading && uploadProgress.total > 0 && (
-            <ProgressBar
+            <ChalkProgressBar
               value={(uploadProgress.current / uploadProgress.total) * 100}
               description={`Uploading ${uploadProgress.fileName}`}
               additionalInfo={`${uploadProgress.current} of ${uploadProgress.total}`}
             />
           )}
-        </SpaceBetween>
-      </Modal>
+        </ChalkSpaceBetween>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={deleteKey !== null}
         onDismiss={() => setDeleteKey(null)}
         header="Delete object"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeleteKey(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDeleteKey(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} loading={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{deleteKey}</b>?
-      </Modal>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showDeleteBucket}
         onDismiss={() => setShowDeleteBucket(false)}
         header="Delete bucket"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowDeleteBucket(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowDeleteBucket(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDeleteBucket} loading={deletingBucket}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDeleteBucket} loading={deletingBucket}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete bucket <b>{bucketName}</b>?
-      </Modal>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showView}
         onDismiss={() => setShowView(false)}
         header={viewKey}
         size="large"
         footer={
-          <Box float="right">
-            <Button variant="link" onClick={() => setShowView(false)}>
+          <ChalkBox float="right">
+            <ChalkButton variant="link" onClick={() => setShowView(false)}>
               Close
-            </Button>
-          </Box>
+            </ChalkButton>
+          </ChalkBox>
         }
       >
         {viewLoading ? (
-          <Spinner />
+          <ChalkSpinner />
         ) : (
           <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0, maxHeight: '60vh', overflow: 'auto' }}>
             {viewBody}
           </pre>
         )}
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

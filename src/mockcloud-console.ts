@@ -21,7 +21,7 @@ const MIME_TYPES: Record<string, string> = {
   '.woff2': 'font/woff2',
 };
 
-export function createNawsConsoleMiddleware(): Middleware {
+export function createMockCloudConsoleMiddleware(): Middleware {
   const distExists = existsSync(DIST_DIR);
 
   return async (req: IncomingMessage, res: ServerResponse, next: () => Promise<void>): Promise<void> => {

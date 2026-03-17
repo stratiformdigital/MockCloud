@@ -14,13 +14,8 @@ import { wafv2Service } from './wafv2/index.js';
 import { kmsService } from './kms/index.js';
 import { eventbridgeService } from './eventbridge/index.js';
 import { ssmService } from './ssm/index.js';
-import { unifiedSearchService } from './unified-search/index.js';
 import { logsService } from './logs/index.js';
 import { monitoringService } from './monitoring/index.js';
-import { consoleNavService } from './console-nav/index.js';
-import { consoleControlService } from './console-control/index.js';
-import { consoleHomeSupportService } from './console-home-support/index.js';
-import { resourceExplorerService } from './resource-explorer/index.js';
 import { guardDutyService } from './guardduty/index.js';
 
 const ALL_SERVICES: MockServiceDefinition[] = [
@@ -41,12 +36,7 @@ const ALL_SERVICES: MockServiceDefinition[] = [
   ssmService,
   logsService,
   monitoringService,
-  consoleNavService,
-  consoleControlService,
-  consoleHomeSupportService,
-  resourceExplorerService,
   guardDutyService,
-  unifiedSearchService,
 ];
 
 export function getAllMockServices(): MockServiceDefinition[] {

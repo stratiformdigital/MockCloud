@@ -1,20 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Header from '@cloudscape-design/components/header';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Container from '@cloudscape-design/components/container';
-import KeyValuePairs from '@cloudscape-design/components/key-value-pairs';
-import StatusIndicator from '@cloudscape-design/components/status-indicator';
-import Table from '@cloudscape-design/components/table';
-import Box from '@cloudscape-design/components/box';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import Textarea from '@cloudscape-design/components/textarea';
-import Spinner from '@cloudscape-design/components/spinner';
-import Flashbar from '@cloudscape-design/components/flashbar';
+import { ChalkHeader, ChalkBreadcrumbs, ChalkSpaceBetween, ChalkContainer, ChalkKeyValuePairs, ChalkStatusIndicator, ChalkTable, ChalkBox, ChalkButton, ChalkModal, ChalkFormField, ChalkInput, ChalkTextarea, ChalkSpinner, ChalkFlashbar } from '../../chalk';
 import {
   DescribeRuleCommand,
   DescribeRuleCommandOutput,
@@ -167,9 +153,9 @@ export default function RuleDetail() {
     }
   };
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Header variant="h1">Error: {error}</Header>;
-  if (!rule) return <Header variant="h1">Rule not found</Header>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkHeader variant="h1">Error: {error}</ChalkHeader>;
+  if (!rule) return <ChalkHeader variant="h1">Rule not found</ChalkHeader>;
 
   let formattedPattern = '-';
   if (rule.EventPattern) {
@@ -183,9 +169,9 @@ export default function RuleDetail() {
   const isEnabled = rule.State === 'ENABLED';
 
   return (
-    <SpaceBetween size="l">
+    <ChalkSpaceBetween size="l">
       {flash.length > 0 && (
-        <Flashbar
+        <ChalkFlashbar
           items={flash.map((f, i) => ({
             type: f.type,
             content: f.content,
@@ -195,34 +181,33 @@ export default function RuleDetail() {
           }))}
         />
       )}
-      <BreadcrumbGroup
+      <ChalkBreadcrumbs
         items={[
-          { text: 'NAWS', href: '/' },
+          { text: 'MockCloud', href: '/' },
           { text: 'EventBridge', href: '/eventbridge' },
           { text: 'Rules', href: '/eventbridge' },
           { text: ruleName!, href: '#' },
         ]}
-        onFollow={(e) => {
-          e.preventDefault();
-          if (e.detail.href !== '#') navigate(e.detail.href);
+        onNavigate={(href) => {
+          if (href !== '#') navigate(href);
         }}
       />
-      <Header
+      <ChalkHeader
         variant="h1"
         actions={
-          <SpaceBetween direction="horizontal" size="xs">
-            <Button onClick={openEdit}>Edit</Button>
-            <Button onClick={handleToggle} loading={toggling}>
+          <ChalkSpaceBetween direction="horizontal" size="xs">
+            <ChalkButton onClick={openEdit}>Edit</ChalkButton>
+            <ChalkButton onClick={handleToggle} loading={toggling}>
               {isEnabled ? 'Disable' : 'Enable'}
-            </Button>
-            <Button onClick={() => setShowDelete(true)}>Delete</Button>
-          </SpaceBetween>
+            </ChalkButton>
+            <ChalkButton onClick={() => setShowDelete(true)}>Delete</ChalkButton>
+          </ChalkSpaceBetween>
         }
       >
         {ruleName}
-      </Header>
-      <Container header={<Header variant="h2">Rule details</Header>}>
-        <KeyValuePairs
+      </ChalkHeader>
+      <ChalkContainer header={<ChalkHeader variant="h2">Rule details</ChalkHeader>}>
+        <ChalkKeyValuePairs
           columns={2}
           items={[
             { label: 'Name', value: rule.Name ?? '-' },
@@ -230,9 +215,9 @@ export default function RuleDetail() {
             {
               label: 'State',
               value: (
-                <StatusIndicator type={isEnabled ? 'success' : 'stopped'}>
+                <ChalkStatusIndicator type={isEnabled ? 'success' : 'stopped'}>
                   {rule.State}
-                </StatusIndicator>
+                </ChalkStatusIndicator>
               ),
             },
             { label: 'Description', value: rule.Description || '-' },
@@ -240,22 +225,22 @@ export default function RuleDetail() {
             { label: 'Event Bus', value: rule.EventBusName ?? '-' },
           ]}
         />
-      </Container>
+      </ChalkContainer>
       {rule.EventPattern && (
-        <Container header={<Header variant="h2">Event pattern</Header>}>
+        <ChalkContainer header={<ChalkHeader variant="h2">Event pattern</ChalkHeader>}>
           <pre style={{ background: '#1a1a2e', color: '#e0e0e0', padding: '16px', borderRadius: '8px', overflow: 'auto', fontSize: '13px', margin: 0 }}>
             {formattedPattern}
           </pre>
-        </Container>
+        </ChalkContainer>
       )}
-      <Table
+      <ChalkTable
         header={
-          <Header
+          <ChalkHeader
             counter={`(${targets.length})`}
-            actions={<Button onClick={() => setShowAddTarget(true)}>Add target</Button>}
+            actions={<ChalkButton onClick={() => setShowAddTarget(true)}>Add target</ChalkButton>}
           >
             Targets
-          </Header>
+          </ChalkHeader>
         }
         items={targets}
         columnDefinitions={[
@@ -278,115 +263,115 @@ export default function RuleDetail() {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <Button variant="inline-link" onClick={() => setRemoveTarget(item)}>
+              <ChalkButton variant="inline-link" onClick={() => setRemoveTarget(item)}>
                 Remove
-              </Button>
+              </ChalkButton>
             ),
           },
         ]}
         empty={
-          <Box textAlign="center" color="inherit">
+          <ChalkBox textAlign="center" color="inherit">
             <b>No targets</b>
-          </Box>
+          </ChalkBox>
         }
       />
 
-      <Modal
+      <ChalkModal
         visible={showEdit}
         onDismiss={() => setShowEdit(false)}
         header="Edit rule"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowEdit(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowEdit(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleSaveEdit} loading={saving}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleSaveEdit} loading={saving}>
                 Save
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="m">
-          <FormField label="Description">
-            <Input value={editDescription} onChange={({ detail }) => setEditDescription(detail.value)} placeholder="Rule description" />
-          </FormField>
-          <FormField label="Schedule Expression">
-            <Input value={editSchedule} onChange={({ detail }) => setEditSchedule(detail.value)} placeholder="rate(1 hour)" />
-          </FormField>
-          <FormField label="Event Pattern">
-            <Textarea value={editPattern} onChange={({ detail }) => setEditPattern(detail.value)} placeholder='{"source": ["aws.ec2"]}' rows={8} />
-          </FormField>
-        </SpaceBetween>
-      </Modal>
+        <ChalkSpaceBetween size="m">
+          <ChalkFormField label="Description">
+            <ChalkInput value={editDescription} onChange={({ detail }) => setEditDescription(detail.value)} placeholder="Rule description" />
+          </ChalkFormField>
+          <ChalkFormField label="Schedule Expression">
+            <ChalkInput value={editSchedule} onChange={({ detail }) => setEditSchedule(detail.value)} placeholder="rate(1 hour)" />
+          </ChalkFormField>
+          <ChalkFormField label="Event Pattern">
+            <ChalkTextarea value={editPattern} onChange={({ detail }) => setEditPattern(detail.value)} placeholder='{"source": ["aws.ec2"]}' rows={8} />
+          </ChalkFormField>
+        </ChalkSpaceBetween>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showAddTarget}
         onDismiss={() => setShowAddTarget(false)}
         header="Add target"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowAddTarget(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowAddTarget(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleAddTarget} loading={addingTarget} disabled={!targetId || !targetArn}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleAddTarget} loading={addingTarget} disabled={!targetId || !targetArn}>
                 Add
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="m">
-          <FormField label="Target ID">
-            <Input value={targetId} onChange={({ detail }) => setTargetId(detail.value)} placeholder="my-target" />
-          </FormField>
-          <FormField label="Target ARN">
-            <Input value={targetArn} onChange={({ detail }) => setTargetArn(detail.value)} placeholder="arn:aws:lambda:us-east-1:123456789012:function:my-function" />
-          </FormField>
-        </SpaceBetween>
-      </Modal>
+        <ChalkSpaceBetween size="m">
+          <ChalkFormField label="Target ID">
+            <ChalkInput value={targetId} onChange={({ detail }) => setTargetId(detail.value)} placeholder="my-target" />
+          </ChalkFormField>
+          <ChalkFormField label="Target ARN">
+            <ChalkInput value={targetArn} onChange={({ detail }) => setTargetArn(detail.value)} placeholder="arn:aws:lambda:us-east-1:123456789012:function:my-function" />
+          </ChalkFormField>
+        </ChalkSpaceBetween>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={removeTarget !== null}
         onDismiss={() => setRemoveTarget(null)}
         header="Remove target"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setRemoveTarget(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setRemoveTarget(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleRemoveTarget} loading={removingTarget}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleRemoveTarget} loading={removingTarget}>
                 Remove
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to remove target <b>{removeTarget?.Id}</b>?
-      </Modal>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showDelete}
         onDismiss={() => setShowDelete(false)}
         header="Delete rule"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowDelete(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowDelete(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} loading={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{ruleName}</b>? This will navigate back to the rules list.
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

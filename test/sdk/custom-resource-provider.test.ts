@@ -73,7 +73,7 @@ describe('customResourceProvider', () => {
     const created = await customResourceProvider.create('MyCustom', {
       ServiceToken: SERVICE_TOKEN,
       Value: 'one',
-      __nawsResourceType: 'Custom::Thing',
+      __mockcloudResourceType: 'Custom::Thing',
     }, context);
 
     expect(created.physicalId).toBe('custom-1');
@@ -103,7 +103,7 @@ describe('customResourceProvider', () => {
       {
         ServiceToken: SERVICE_TOKEN,
         Value: 'two',
-        __nawsResourceType: 'Custom::Thing',
+        __mockcloudResourceType: 'Custom::Thing',
       },
       context,
     );
@@ -156,7 +156,7 @@ describe('customResourceProvider', () => {
 
     await expect(customResourceProvider.create('MissingCustom', {
       ServiceToken: SERVICE_TOKEN,
-      __nawsResourceType: 'Custom::Thing',
+      __mockcloudResourceType: 'Custom::Thing',
     }, context)).rejects.toThrow(`Custom resource handler not found: ${FUNCTION_NAME}`);
 
     expect(executeLambdaHandlerMock).not.toHaveBeenCalled();
@@ -165,7 +165,7 @@ describe('customResourceProvider', () => {
 
   test('fails when ServiceToken is missing', async () => {
     await expect(customResourceProvider.create('MissingCustom', {
-      __nawsResourceType: 'Custom::Thing',
+      __mockcloudResourceType: 'Custom::Thing',
     }, context)).rejects.toThrow('Custom resource ServiceToken is required');
 
     expect(executeLambdaHandlerMock).not.toHaveBeenCalled();
@@ -184,7 +184,7 @@ describe('customResourceProvider', () => {
     await expect(customResourceProvider.create('MyCustom', {
       ServiceToken: SERVICE_TOKEN,
       Value: 'one',
-      __nawsResourceType: 'Custom::Thing',
+      __mockcloudResourceType: 'Custom::Thing',
     }, context)).rejects.toThrow('bad custom resource');
 
     expect(customResourceStates.size).toBe(0);

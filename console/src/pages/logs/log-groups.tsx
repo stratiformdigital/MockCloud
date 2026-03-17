@@ -1,17 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table from '@cloudscape-design/components/table';
-import Header from '@cloudscape-design/components/header';
-import TextFilter from '@cloudscape-design/components/text-filter';
-import Spinner from '@cloudscape-design/components/spinner';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Link from '@cloudscape-design/components/link';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import Box from '@cloudscape-design/components/box';
-import { useCollection } from '@cloudscape-design/collection-hooks';
+import { ChalkTable, ChalkHeader, ChalkTextFilter, ChalkSpinner, ChalkSpaceBetween, ChalkLink, ChalkButton, ChalkModal, ChalkFormField, ChalkInput, ChalkBox, useChalkCollection } from '../../chalk';
 import {
   DescribeLogGroupsCommand,
   CreateLogGroupCommand,
@@ -85,7 +74,7 @@ export default function LogGroups() {
     }
   };
 
-  const { items, filterProps, collectionProps } = useCollection(logGroups, {
+  const { items, filterProps, collectionProps } = useChalkCollection(logGroups, {
     filtering: {
       filteringFunction: (item, text) =>
         (item.logGroupName ?? '').toLowerCase().includes(text.toLowerCase()),
@@ -93,35 +82,35 @@ export default function LogGroups() {
     sorting: {},
   });
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Header variant="h1">Error: {error}</Header>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkHeader variant="h1">Error: {error}</ChalkHeader>;
 
   return (
-    <SpaceBetween size="l">
-      <Table
+    <ChalkSpaceBetween size="l">
+      <ChalkTable
         {...collectionProps}
         header={
-          <Header
+          <ChalkHeader
             variant="h1"
             counter={`(${logGroups.length})`}
             actions={
-              <Button variant="primary" onClick={() => setShowCreate(true)}>
+              <ChalkButton variant="primary" onClick={() => setShowCreate(true)}>
                 Create log group
-              </Button>
+              </ChalkButton>
             }
           >
             CloudWatch Log Groups
-          </Header>
+          </ChalkHeader>
         }
-        filter={<TextFilter {...filterProps} filteringPlaceholder="Find log groups" />}
+        filter={<ChalkTextFilter {...filterProps} filteringPlaceholder="Find log groups" />}
         columnDefinitions={[
           {
             id: 'name',
             header: 'Log Group Name',
             cell: (item) => (
-              <Link onFollow={(e) => { e.preventDefault(); navigate(`/logs/log-groups/${item.logGroupName}`); }}>
+              <ChalkLink onFollow={(e) => { e.preventDefault(); navigate(`/logs/log-groups/${item.logGroupName}`); }}>
                 {item.logGroupName ?? '-'}
-              </Link>
+              </ChalkLink>
             ),
             sortingField: 'logGroupName',
           },
@@ -147,58 +136,56 @@ export default function LogGroups() {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <Button variant="inline-link" onClick={() => setDeleteGroup(item)}>
+              <ChalkButton variant="inline-link" onClick={() => setDeleteGroup(item)}>
                 Delete
-              </Button>
+              </ChalkButton>
             ),
           },
         ]}
         items={items}
-        variant="full-page"
-        stickyHeader
       />
 
-      <Modal
+      <ChalkModal
         visible={showCreate}
         onDismiss={() => setShowCreate(false)}
         header="Create log group"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowCreate(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowCreate(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleCreate} loading={creating} disabled={!createName}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleCreate} loading={creating} disabled={!createName}>
                 Create
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <FormField label="Log group name">
-          <Input value={createName} onChange={({ detail }) => setCreateName(detail.value)} placeholder="/my/log-group" />
-        </FormField>
-      </Modal>
+        <ChalkFormField label="Log group name">
+          <ChalkInput value={createName} onChange={({ detail }) => setCreateName(detail.value)} placeholder="/my/log-group" />
+        </ChalkFormField>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={deleteGroup !== null}
         onDismiss={() => setDeleteGroup(null)}
         header="Delete log group"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeleteGroup(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDeleteGroup(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} loading={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{deleteGroup?.logGroupName}</b>?
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

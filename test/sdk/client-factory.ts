@@ -16,9 +16,9 @@ import { CognitoIdentityClient } from '@aws-sdk/client-cognito-identity';
 import { WAFV2Client } from '@aws-sdk/client-wafv2';
 
 export function getTestEndpoint(): string {
-  const endpoint = process.env.NAWS_TEST_ENDPOINT;
+  const endpoint = process.env.MOCKCLOUD_TEST_ENDPOINT;
   if (!endpoint) {
-    throw new Error('NAWS_TEST_ENDPOINT must be set. Run tests via scripts/test.sh or scripts/run-with-server.sh.');
+    throw new Error('MOCKCLOUD_TEST_ENDPOINT must be set. Run tests via scripts/test.sh or scripts/run-with-server.sh.');
   }
   return endpoint;
 }
@@ -31,7 +31,7 @@ const commonConfig = {
   endpoint: ENDPOINT,
   credentials: {
     accessKeyId: 'AKIANAWSEXAMPLE',
-    secretAccessKey: 'naws-secret-key-1234567890',
+    secretAccessKey: 'mockcloud-secret-key-1234567890',
   },
   maxAttempts: 1,
   tls: { rejectUnauthorized: false },

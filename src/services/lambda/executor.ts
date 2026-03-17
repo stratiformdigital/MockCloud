@@ -32,10 +32,10 @@ function buildInvocationEnv(fn: StoredFunction, tempDir: string): NodeJS.Process
     AWS_DEFAULT_REGION: REGION,
     AWS_ENDPOINT_URL: getBaseUrl(),
     AWS_ACCESS_KEY_ID: 'AKIANAWSEXAMPLEKEY00',
-    AWS_SECRET_ACCESS_KEY: 'naws-secret-key-for-cli-00000000000000000',
+    AWS_SECRET_ACCESS_KEY: 'mockcloud-secret-key-for-cli-00000000000000000',
     LAMBDA_TASK_ROOT: tempDir,
     _HANDLER: fn.handler,
-    // Fallback module resolution to naws-server's packages (AWS SDK, etc.)
+    // Fallback module resolution to mockcloud-server's packages (AWS SDK, etc.)
     NODE_PATH: serverNodeModules + (process.env.NODE_PATH ? `:${process.env.NODE_PATH}` : ''),
   };
 }
@@ -155,7 +155,7 @@ export async function executeLambdaHandler(
     };
   }
 
-  const tempDir = mkdtempSync(join(tmpdir(), 'naws-lambda-'));
+  const tempDir = mkdtempSync(join(tmpdir(), 'mockcloud-lambda-'));
   await extractZipBufferToDirectory(zipObj.body, tempDir);
 
   try {

@@ -55,20 +55,20 @@ interface RouteTable {
 
 const vpcs: Vpc[] = [
   {
-    vpcId: 'vpc-naws0001',
+    vpcId: 'vpc-mockcloud0001',
     state: 'available',
     cidrBlock: '10.0.0.0/16',
     isDefault: false,
     ownerId: ACCOUNT_ID,
-    cidrAssociationId: 'vpc-cidr-assoc-naws0001',
-    tags: [{ key: 'Name', value: 'naws-dev' }],
+    cidrAssociationId: 'vpc-cidr-assoc-mockcloud0001',
+    tags: [{ key: 'Name', value: 'mockcloud-dev' }],
   },
 ];
 
 const subnets: Subnet[] = [
   {
-    subnetId: 'subnet-naws0001',
-    vpcId: 'vpc-naws0001',
+    subnetId: 'subnet-mockcloud0001',
+    vpcId: 'vpc-mockcloud0001',
     state: 'available',
     cidrBlock: '10.0.1.0/24',
     availabilityZone: `${REGION}a`,
@@ -76,14 +76,14 @@ const subnets: Subnet[] = [
     mapPublicIpOnLaunch: true,
     ownerId: ACCOUNT_ID,
     tags: [
-      { key: 'Name', value: 'naws-public-1a' },
+      { key: 'Name', value: 'mockcloud-public-1a' },
       { key: 'aws-cdk:subnet-type', value: 'Public' },
       { key: 'aws-cdk:subnet-name', value: 'Public' },
     ],
   },
   {
-    subnetId: 'subnet-naws0002',
-    vpcId: 'vpc-naws0001',
+    subnetId: 'subnet-mockcloud0002',
+    vpcId: 'vpc-mockcloud0001',
     state: 'available',
     cidrBlock: '10.0.2.0/24',
     availabilityZone: `${REGION}b`,
@@ -91,14 +91,14 @@ const subnets: Subnet[] = [
     mapPublicIpOnLaunch: true,
     ownerId: ACCOUNT_ID,
     tags: [
-      { key: 'Name', value: 'naws-public-1b' },
+      { key: 'Name', value: 'mockcloud-public-1b' },
       { key: 'aws-cdk:subnet-type', value: 'Public' },
       { key: 'aws-cdk:subnet-name', value: 'Public' },
     ],
   },
   {
-    subnetId: 'subnet-naws0003',
-    vpcId: 'vpc-naws0001',
+    subnetId: 'subnet-mockcloud0003',
+    vpcId: 'vpc-mockcloud0001',
     state: 'available',
     cidrBlock: '10.0.3.0/24',
     availabilityZone: `${REGION}c`,
@@ -106,14 +106,14 @@ const subnets: Subnet[] = [
     mapPublicIpOnLaunch: true,
     ownerId: ACCOUNT_ID,
     tags: [
-      { key: 'Name', value: 'naws-public-1c' },
+      { key: 'Name', value: 'mockcloud-public-1c' },
       { key: 'aws-cdk:subnet-type', value: 'Public' },
       { key: 'aws-cdk:subnet-name', value: 'Public' },
     ],
   },
   {
-    subnetId: 'subnet-naws0004',
-    vpcId: 'vpc-naws0001',
+    subnetId: 'subnet-mockcloud0004',
+    vpcId: 'vpc-mockcloud0001',
     state: 'available',
     cidrBlock: '10.0.4.0/24',
     availabilityZone: `${REGION}a`,
@@ -121,14 +121,14 @@ const subnets: Subnet[] = [
     mapPublicIpOnLaunch: false,
     ownerId: ACCOUNT_ID,
     tags: [
-      { key: 'Name', value: 'naws-private-1a' },
+      { key: 'Name', value: 'mockcloud-private-1a' },
       { key: 'aws-cdk:subnet-type', value: 'Private' },
       { key: 'aws-cdk:subnet-name', value: 'Private' },
     ],
   },
   {
-    subnetId: 'subnet-naws0005',
-    vpcId: 'vpc-naws0001',
+    subnetId: 'subnet-mockcloud0005',
+    vpcId: 'vpc-mockcloud0001',
     state: 'available',
     cidrBlock: '10.0.5.0/24',
     availabilityZone: `${REGION}b`,
@@ -136,14 +136,14 @@ const subnets: Subnet[] = [
     mapPublicIpOnLaunch: false,
     ownerId: ACCOUNT_ID,
     tags: [
-      { key: 'Name', value: 'naws-private-1b' },
+      { key: 'Name', value: 'mockcloud-private-1b' },
       { key: 'aws-cdk:subnet-type', value: 'Private' },
       { key: 'aws-cdk:subnet-name', value: 'Private' },
     ],
   },
   {
-    subnetId: 'subnet-naws0006',
-    vpcId: 'vpc-naws0001',
+    subnetId: 'subnet-mockcloud0006',
+    vpcId: 'vpc-mockcloud0001',
     state: 'available',
     cidrBlock: '10.0.6.0/24',
     availabilityZone: `${REGION}c`,
@@ -151,7 +151,7 @@ const subnets: Subnet[] = [
     mapPublicIpOnLaunch: false,
     ownerId: ACCOUNT_ID,
     tags: [
-      { key: 'Name', value: 'naws-private-1c' },
+      { key: 'Name', value: 'mockcloud-private-1c' },
       { key: 'aws-cdk:subnet-type', value: 'Private' },
       { key: 'aws-cdk:subnet-name', value: 'Private' },
     ],
@@ -160,30 +160,30 @@ const subnets: Subnet[] = [
 
 const routeTables: RouteTable[] = [
   {
-    routeTableId: 'rtb-naws0001',
-    vpcId: 'vpc-naws0001',
+    routeTableId: 'rtb-mockcloud0001',
+    vpcId: 'vpc-mockcloud0001',
     associations: [
-      { routeTableAssociationId: 'rtbassoc-naws0001', routeTableId: 'rtb-naws0001', subnetId: 'subnet-naws0001', main: false },
-      { routeTableAssociationId: 'rtbassoc-naws0002', routeTableId: 'rtb-naws0001', subnetId: 'subnet-naws0002', main: false },
-      { routeTableAssociationId: 'rtbassoc-naws0003', routeTableId: 'rtb-naws0001', subnetId: 'subnet-naws0003', main: false },
+      { routeTableAssociationId: 'rtbassoc-mockcloud0001', routeTableId: 'rtb-mockcloud0001', subnetId: 'subnet-mockcloud0001', main: false },
+      { routeTableAssociationId: 'rtbassoc-mockcloud0002', routeTableId: 'rtb-mockcloud0001', subnetId: 'subnet-mockcloud0002', main: false },
+      { routeTableAssociationId: 'rtbassoc-mockcloud0003', routeTableId: 'rtb-mockcloud0001', subnetId: 'subnet-mockcloud0003', main: false },
     ],
     routes: [
       { destinationCidrBlock: '10.0.0.0/16', gatewayId: 'local', state: 'active', origin: 'CreateRouteTable' },
-      { destinationCidrBlock: '0.0.0.0/0', gatewayId: 'igw-naws0001', state: 'active', origin: 'CreateRoute' },
+      { destinationCidrBlock: '0.0.0.0/0', gatewayId: 'igw-mockcloud0001', state: 'active', origin: 'CreateRoute' },
     ],
     tags: [],
   },
   {
-    routeTableId: 'rtb-naws0002',
-    vpcId: 'vpc-naws0001',
+    routeTableId: 'rtb-mockcloud0002',
+    vpcId: 'vpc-mockcloud0001',
     associations: [
-      { routeTableAssociationId: 'rtbassoc-naws0004', routeTableId: 'rtb-naws0002', subnetId: 'subnet-naws0004', main: false },
-      { routeTableAssociationId: 'rtbassoc-naws0005', routeTableId: 'rtb-naws0002', subnetId: 'subnet-naws0005', main: false },
-      { routeTableAssociationId: 'rtbassoc-naws0006', routeTableId: 'rtb-naws0002', subnetId: 'subnet-naws0006', main: false },
+      { routeTableAssociationId: 'rtbassoc-mockcloud0004', routeTableId: 'rtb-mockcloud0002', subnetId: 'subnet-mockcloud0004', main: false },
+      { routeTableAssociationId: 'rtbassoc-mockcloud0005', routeTableId: 'rtb-mockcloud0002', subnetId: 'subnet-mockcloud0005', main: false },
+      { routeTableAssociationId: 'rtbassoc-mockcloud0006', routeTableId: 'rtb-mockcloud0002', subnetId: 'subnet-mockcloud0006', main: false },
     ],
     routes: [
       { destinationCidrBlock: '10.0.0.0/16', gatewayId: 'local', state: 'active', origin: 'CreateRouteTable' },
-      { destinationCidrBlock: '0.0.0.0/0', natGatewayId: 'nat-naws0001', state: 'active', origin: 'CreateRoute' },
+      { destinationCidrBlock: '0.0.0.0/0', natGatewayId: 'nat-mockcloud0001', state: 'active', origin: 'CreateRoute' },
     ],
     tags: [],
   },

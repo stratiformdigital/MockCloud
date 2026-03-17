@@ -170,7 +170,7 @@ export const ec2Service = defineMockService({
 
     CreateVpcEndpoint: (req) => {
       const body = req.body as Record<string, string>;
-      const ep = createVpcEndpoint(body.VpcId ?? 'vpc-naws0001', body.ServiceName ?? '', body.VpcEndpointType ?? 'Gateway');
+      const ep = createVpcEndpoint(body.VpcId ?? 'vpc-mockcloud0001', body.ServiceName ?? '', body.VpcEndpointType ?? 'Gateway');
       return xml(`<CreateVpcEndpointResponse xmlns="${NS}">${REQ_ID}<vpcEndpoint>${buildVpcEndpointXml(ep)}</vpcEndpoint></CreateVpcEndpointResponse>`);
     },
 

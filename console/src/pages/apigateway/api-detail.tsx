@@ -1,17 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Header from '@cloudscape-design/components/header';
-import Tabs from '@cloudscape-design/components/tabs';
-import Table from '@cloudscape-design/components/table';
-import Spinner from '@cloudscape-design/components/spinner';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Box from '@cloudscape-design/components/box';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import Select from '@cloudscape-design/components/select';
-import Flashbar from '@cloudscape-design/components/flashbar';
+import { ChalkHeader, ChalkTabs, ChalkTable, ChalkSpinner, ChalkSpaceBetween, ChalkBox, ChalkButton, ChalkModal, ChalkFormField, ChalkInput, ChalkSelect, ChalkFlashbar } from '../../chalk';
 import {
   GetRestApiCommand,
   GetResourcesCommand,
@@ -135,13 +124,13 @@ function ResourcesTab({ apiId }: { apiId: string }) {
     }
   };
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Box color="text-status-error">{error}</Box>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkBox color="text-status-error">{error}</ChalkBox>;
 
   return (
     <>
       {flash.length > 0 && (
-        <Flashbar
+        <ChalkFlashbar
           items={flash.map((f, i) => ({
             type: f.type,
             content: f.content,
@@ -151,18 +140,18 @@ function ResourcesTab({ apiId }: { apiId: string }) {
           }))}
         />
       )}
-      <Table
+      <ChalkTable
         header={
-          <Header
+          <ChalkHeader
             counter={`(${resources.length})`}
             actions={
-              <Button onClick={() => setShowCreateResource(true)} disabled={!rootResourceId}>
+              <ChalkButton onClick={() => setShowCreateResource(true)} disabled={!rootResourceId}>
                 Create resource
-              </Button>
+              </ChalkButton>
             }
           >
             Resources
-          </Header>
+          </ChalkHeader>
         }
         columnDefinitions={[
           {
@@ -188,8 +177,8 @@ function ResourcesTab({ apiId }: { apiId: string }) {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <SpaceBetween direction="horizontal" size="xs">
-                <Button
+              <ChalkSpaceBetween direction="horizontal" size="xs">
+                <ChalkButton
                   variant="inline-link"
                   onClick={() => {
                     setSelectedMethod(HTTP_METHODS[0]);
@@ -197,13 +186,13 @@ function ResourcesTab({ apiId }: { apiId: string }) {
                   }}
                 >
                   Add method
-                </Button>
+                </ChalkButton>
                 {item.path !== '/' && (
-                  <Button variant="inline-link" onClick={() => setDeleteTarget(item)}>
+                  <ChalkButton variant="inline-link" onClick={() => setDeleteTarget(item)}>
                     Delete
-                  </Button>
+                  </ChalkButton>
                 )}
-              </SpaceBetween>
+              </ChalkSpaceBetween>
             ),
           },
         ]}
@@ -211,77 +200,77 @@ function ResourcesTab({ apiId }: { apiId: string }) {
         sortingDisabled={false}
       />
 
-      <Modal
+      <ChalkModal
         visible={showCreateResource}
         onDismiss={() => setShowCreateResource(false)}
         header="Create resource"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowCreateResource(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowCreateResource(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleCreateResource} loading={creatingResource} disabled={!pathPart}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleCreateResource} loading={creatingResource} disabled={!pathPart}>
                 Create
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <FormField label="Path part" description="e.g. users or {id}">
-          <Input
+        <ChalkFormField label="Path part" description="e.g. users or {id}">
+          <ChalkInput
             value={pathPart}
             onChange={({ detail }) => setPathPart(detail.value)}
             placeholder="users"
           />
-        </FormField>
-      </Modal>
+        </ChalkFormField>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={methodTarget !== null}
         onDismiss={() => setMethodTarget(null)}
         header={`Add method to ${methodTarget?.path ?? ''}`}
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setMethodTarget(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setMethodTarget(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleAddMethod} loading={addingMethod}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleAddMethod} loading={addingMethod}>
                 Add
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <FormField label="HTTP method">
-          <Select
+        <ChalkFormField label="HTTP method">
+          <ChalkSelect
             selectedOption={selectedMethod}
             onChange={({ detail }) => setSelectedMethod(detail.selectedOption as typeof selectedMethod)}
             options={HTTP_METHODS}
           />
-        </FormField>
-      </Modal>
+        </ChalkFormField>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={deleteTarget !== null}
         onDismiss={() => setDeleteTarget(null)}
         header="Delete resource"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeleteTarget(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDeleteTarget(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDeleteResource} loading={deletingResource}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDeleteResource} loading={deletingResource}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete resource <b>{deleteTarget?.path}</b>?
-      </Modal>
+      </ChalkModal>
     </>
   );
 }
@@ -308,12 +297,12 @@ function StagesTab({ apiId }: { apiId: string }) {
     return () => { cancelled = true; };
   }, [apiId]);
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Box color="text-status-error">{error}</Box>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkBox color="text-status-error">{error}</ChalkBox>;
 
   return (
-    <Table
-      header={<Header counter={`(${stages.length})`}>Stages</Header>}
+    <ChalkTable
+      header={<ChalkHeader counter={`(${stages.length})`}>Stages</ChalkHeader>}
       columnDefinitions={[
         {
           id: 'name',
@@ -388,14 +377,14 @@ export default function ApiDetail() {
     }
   };
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Header variant="h1">Error: {error}</Header>;
-  if (!api || !apiId) return <Header variant="h1">API not found</Header>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkHeader variant="h1">Error: {error}</ChalkHeader>;
+  if (!api || !apiId) return <ChalkHeader variant="h1">API not found</ChalkHeader>;
 
   return (
-    <SpaceBetween size="l">
+    <ChalkSpaceBetween size="l">
       {flash.length > 0 && (
-        <Flashbar
+        <ChalkFlashbar
           items={flash.map((f, i) => ({
             type: f.type,
             content: f.content,
@@ -406,16 +395,16 @@ export default function ApiDetail() {
         />
       )}
 
-      <Header
+      <ChalkHeader
         variant="h1"
         description={api.description ?? ''}
         actions={
-          <Button onClick={() => setShowDelete(true)}>Delete</Button>
+          <ChalkButton onClick={() => setShowDelete(true)}>Delete</ChalkButton>
         }
       >
         {api.name}
-      </Header>
-      <Tabs
+      </ChalkHeader>
+      <ChalkTabs
         tabs={[
           {
             id: 'resources',
@@ -430,25 +419,25 @@ export default function ApiDetail() {
         ]}
       />
 
-      <Modal
+      <ChalkModal
         visible={showDelete}
         onDismiss={() => setShowDelete(false)}
         header="Delete API"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowDelete(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowDelete(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} loading={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{api.name}</b>?
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

@@ -1,17 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table from '@cloudscape-design/components/table';
-import Header from '@cloudscape-design/components/header';
-import TextFilter from '@cloudscape-design/components/text-filter';
-import Spinner from '@cloudscape-design/components/spinner';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Link from '@cloudscape-design/components/link';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import Box from '@cloudscape-design/components/box';
-import { useCollection } from '@cloudscape-design/collection-hooks';
+import {
+  ChalkTable, ChalkHeader, ChalkTextFilter, ChalkSpinner, ChalkSpaceBetween,
+  ChalkLink, ChalkButton, ChalkModal, ChalkFormField, ChalkInput, ChalkBox,
+  useChalkCollection,
+} from '../../chalk';
 import { DescribeSecurityGroupsCommand, CreateSecurityGroupCommand, DeleteSecurityGroupCommand, SecurityGroup } from '@aws-sdk/client-ec2';
 import { ec2 } from '../../api/clients';
 
@@ -77,7 +70,7 @@ export default function SecurityGroups() {
     }
   };
 
-  const { items, filterProps, collectionProps } = useCollection(groups, {
+  const { items, filterProps, collectionProps } = useChalkCollection(groups, {
     filtering: {
       filteringFunction: (item, text) =>
         (item.GroupName ?? '').toLowerCase().includes(text.toLowerCase()) ||
@@ -86,35 +79,35 @@ export default function SecurityGroups() {
     sorting: {},
   });
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Header variant="h1">Error: {error}</Header>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkHeader variant="h1">Error: {error}</ChalkHeader>;
 
   return (
-    <SpaceBetween size="l">
-      <Table
+    <ChalkSpaceBetween size="l">
+      <ChalkTable
         {...collectionProps}
         header={
-          <Header
+          <ChalkHeader
             variant="h1"
             counter={`(${groups.length})`}
             actions={
-              <Button variant="primary" onClick={() => setShowCreate(true)}>
+              <ChalkButton variant="primary" onClick={() => setShowCreate(true)}>
                 Create security group
-              </Button>
+              </ChalkButton>
             }
           >
             Security Groups
-          </Header>
+          </ChalkHeader>
         }
-        filter={<TextFilter {...filterProps} filteringPlaceholder="Find security groups" />}
+        filter={<ChalkTextFilter {...filterProps} filteringPlaceholder="Find security groups" />}
         columnDefinitions={[
           {
             id: 'groupId',
             header: 'Group ID',
             cell: (item) => (
-              <Link onFollow={(e) => { e.preventDefault(); navigate(`/ec2/security-groups/${item.GroupId}`); }}>
+              <ChalkLink onFollow={(e) => { e.preventDefault(); navigate(`/ec2/security-groups/${item.GroupId}`); }}>
                 {item.GroupId ?? '-'}
-              </Link>
+              </ChalkLink>
             ),
             sortingField: 'GroupId',
           },
@@ -138,9 +131,9 @@ export default function SecurityGroups() {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <Button variant="inline-link" onClick={() => setDeleteGroup(item)}>
+              <ChalkButton variant="inline-link" onClick={() => setDeleteGroup(item)}>
                 Delete
-              </Button>
+              </ChalkButton>
             ),
           },
         ]}
@@ -149,55 +142,55 @@ export default function SecurityGroups() {
         stickyHeader
       />
 
-      <Modal
+      <ChalkModal
         visible={showCreate}
         onDismiss={() => setShowCreate(false)}
         header="Create security group"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowCreate(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowCreate(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleCreate} loading={creating} disabled={!createName || !createDescription}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleCreate} loading={creating} disabled={!createName || !createDescription}>
                 Create
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="m">
-          <FormField label="Name">
-            <Input value={createName} onChange={({ detail }) => setCreateName(detail.value)} placeholder="my-security-group" />
-          </FormField>
-          <FormField label="Description">
-            <Input value={createDescription} onChange={({ detail }) => setCreateDescription(detail.value)} placeholder="Security group description" />
-          </FormField>
-          <FormField label="VPC ID" description="Optional">
-            <Input value={createVpcId} onChange={({ detail }) => setCreateVpcId(detail.value)} placeholder="vpc-xxxxxxxx" />
-          </FormField>
-        </SpaceBetween>
-      </Modal>
+        <ChalkSpaceBetween size="m">
+          <ChalkFormField label="Name">
+            <ChalkInput value={createName} onChange={({ detail }) => setCreateName(detail.value)} placeholder="my-security-group" />
+          </ChalkFormField>
+          <ChalkFormField label="Description">
+            <ChalkInput value={createDescription} onChange={({ detail }) => setCreateDescription(detail.value)} placeholder="Security group description" />
+          </ChalkFormField>
+          <ChalkFormField label="VPC ID" description="Optional">
+            <ChalkInput value={createVpcId} onChange={({ detail }) => setCreateVpcId(detail.value)} placeholder="vpc-xxxxxxxx" />
+          </ChalkFormField>
+        </ChalkSpaceBetween>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={deleteGroup !== null}
         onDismiss={() => setDeleteGroup(null)}
         header="Delete security group"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeleteGroup(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDeleteGroup(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} loading={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{deleteGroup?.GroupName}</b> ({deleteGroup?.GroupId})?
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

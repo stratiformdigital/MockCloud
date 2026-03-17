@@ -17,7 +17,7 @@ export const stsService = defineMockService({
     GetCallerIdentity: () =>
       xml(`<GetCallerIdentityResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
   <GetCallerIdentityResult>
-    <Arn>arn:aws:iam::${ACCOUNT_ID}:user/naws-user</Arn>
+    <Arn>arn:aws:iam::${ACCOUNT_ID}:user/mockcloud-user</Arn>
     <UserId>AIDANAWSEXAMPLEUSER</UserId>
     <Account>${ACCOUNT_ID}</Account>
   </GetCallerIdentityResult>
@@ -29,8 +29,8 @@ export const stsService = defineMockService({
   <GetSessionTokenResult>
     <Credentials>
       <AccessKeyId>ASIANAWSEXAMPLEKEY</AccessKeyId>
-      <SecretAccessKey>naws-secret-key</SecretAccessKey>
-      <SessionToken>naws-session-token</SessionToken>
+      <SecretAccessKey>mockcloud-secret-key</SecretAccessKey>
+      <SessionToken>mockcloud-session-token</SessionToken>
       <Expiration>2099-12-31T23:59:59Z</Expiration>
     </Credentials>
   </GetSessionTokenResult>
@@ -42,13 +42,13 @@ export const stsService = defineMockService({
   <AssumeRoleResult>
     <Credentials>
       <AccessKeyId>ASIANAWSEXAMPLEKEY</AccessKeyId>
-      <SecretAccessKey>naws-secret-key</SecretAccessKey>
-      <SessionToken>naws-session-token</SessionToken>
+      <SecretAccessKey>mockcloud-secret-key</SecretAccessKey>
+      <SessionToken>mockcloud-session-token</SessionToken>
       <Expiration>2099-12-31T23:59:59Z</Expiration>
     </Credentials>
     <AssumedRoleUser>
       <AssumedRoleId>AROANAWSEXAMPLE:session</AssumedRoleId>
-      <Arn>arn:aws:sts::${ACCOUNT_ID}:assumed-role/naws-role/session</Arn>
+      <Arn>arn:aws:sts::${ACCOUNT_ID}:assumed-role/mockcloud-role/session</Arn>
     </AssumedRoleUser>
   </AssumeRoleResult>
   <ResponseMetadata><RequestId>00000000-0000-0000-0000-000000000000</RequestId></ResponseMetadata>

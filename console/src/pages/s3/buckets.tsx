@@ -1,17 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table from '@cloudscape-design/components/table';
-import Header from '@cloudscape-design/components/header';
-import TextFilter from '@cloudscape-design/components/text-filter';
-import Link from '@cloudscape-design/components/link';
-import Spinner from '@cloudscape-design/components/spinner';
-import Box from '@cloudscape-design/components/box';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import { useCollection } from '@cloudscape-design/collection-hooks';
+import { ChalkTable, ChalkHeader, ChalkTextFilter, ChalkLink, ChalkSpinner, ChalkBox, ChalkSpaceBetween, ChalkButton, ChalkModal, ChalkFormField, ChalkInput, useChalkCollection } from '../../chalk';
 import { ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand, type Bucket } from '@aws-sdk/client-s3';
 import { s3 } from '../../api/clients';
 
@@ -65,7 +54,7 @@ export default function Buckets() {
     }
   };
 
-  const { items, filterProps, collectionProps } = useCollection(buckets, {
+  const { items, filterProps, collectionProps } = useChalkCollection(buckets, {
     filtering: {
       filteringFunction: (item, text) =>
         (item.Name ?? '').toLowerCase().includes(text.toLowerCase()),
@@ -73,23 +62,23 @@ export default function Buckets() {
     sorting: {},
   });
 
-  if (loading) return <Spinner size="large" />;
+  if (loading) return <ChalkSpinner size="large" />;
 
   return (
-    <SpaceBetween size="l">
-      <Table
+    <ChalkSpaceBetween size="l">
+      <ChalkTable
         {...collectionProps}
         header={
-          <Header
+          <ChalkHeader
             counter={`(${buckets.length})`}
             actions={
-              <Button variant="primary" onClick={() => setShowCreate(true)}>
+              <ChalkButton variant="primary" onClick={() => setShowCreate(true)}>
                 Create bucket
-              </Button>
+              </ChalkButton>
             }
           >
             S3 Buckets
-          </Header>
+          </ChalkHeader>
         }
         items={items}
         columnDefinitions={[
@@ -97,14 +86,14 @@ export default function Buckets() {
             id: 'name',
             header: 'Bucket Name',
             cell: (item) => (
-              <Link
+              <ChalkLink
                 onFollow={(e) => {
                   e.preventDefault();
                   navigate(`/s3/buckets/${item.Name}`);
                 }}
               >
                 {item.Name}
-              </Link>
+              </ChalkLink>
             ),
             sortingField: 'Name',
           },
@@ -118,63 +107,63 @@ export default function Buckets() {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <Button variant="inline-link" onClick={() => setDeleteBucket(item.Name!)}>
+              <ChalkButton variant="inline-link" onClick={() => setDeleteBucket(item.Name!)}>
                 Delete
-              </Button>
+              </ChalkButton>
             ),
           },
         ]}
         filter={
-          <TextFilter {...filterProps} filteringPlaceholder="Find buckets" />
+          <ChalkTextFilter {...filterProps} filteringPlaceholder="Find buckets" />
         }
         empty={
-          <Box textAlign="center" color="inherit">
+          <ChalkBox textAlign="center" color="inherit">
             <b>No buckets</b>
-          </Box>
+          </ChalkBox>
         }
       />
 
-      <Modal
+      <ChalkModal
         visible={showCreate}
         onDismiss={() => setShowCreate(false)}
         header="Create bucket"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowCreate(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowCreate(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleCreate} loading={creating} disabled={!createName}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleCreate} loading={creating} disabled={!createName}>
                 Create
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <FormField label="Bucket name">
-          <Input value={createName} onChange={({ detail }) => setCreateName(detail.value)} placeholder="my-bucket" />
-        </FormField>
-      </Modal>
+        <ChalkFormField label="Bucket name">
+          <ChalkInput value={createName} onChange={({ detail }) => setCreateName(detail.value)} placeholder="my-bucket" />
+        </ChalkFormField>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={deleteBucket !== null}
         onDismiss={() => setDeleteBucket(null)}
         header="Delete bucket"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeleteBucket(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDeleteBucket(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} loading={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{deleteBucket}</b>?
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

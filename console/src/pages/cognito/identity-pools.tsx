@@ -1,18 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table from '@cloudscape-design/components/table';
-import Header from '@cloudscape-design/components/header';
-import TextFilter from '@cloudscape-design/components/text-filter';
-import Link from '@cloudscape-design/components/link';
-import Spinner from '@cloudscape-design/components/spinner';
-import Box from '@cloudscape-design/components/box';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import Checkbox from '@cloudscape-design/components/checkbox';
-import { useCollection } from '@cloudscape-design/collection-hooks';
+import { ChalkTable, ChalkHeader, ChalkTextFilter, ChalkLink, ChalkSpinner, ChalkBox, ChalkSpaceBetween, ChalkButton, ChalkModal, ChalkFormField, ChalkInput, ChalkCheckbox, useChalkCollection } from '../../chalk';
 import {
   ListIdentityPoolsCommand,
   CreateIdentityPoolCommand,
@@ -79,7 +67,7 @@ export default function IdentityPools() {
     }
   };
 
-  const { items, filterProps, collectionProps } = useCollection(pools, {
+  const { items, filterProps, collectionProps } = useChalkCollection(pools, {
     filtering: {
       filteringFunction: (item, text) => {
         const lower = text.toLowerCase();
@@ -92,23 +80,23 @@ export default function IdentityPools() {
     sorting: {},
   });
 
-  if (loading) return <Spinner size="large" />;
+  if (loading) return <ChalkSpinner size="large" />;
 
   return (
-    <SpaceBetween size="l">
-      <Table
+    <ChalkSpaceBetween size="l">
+      <ChalkTable
         {...collectionProps}
         header={
-          <Header
+          <ChalkHeader
             counter={`(${pools.length})`}
             actions={
-              <Button variant="primary" onClick={() => setShowCreate(true)}>
+              <ChalkButton variant="primary" onClick={() => setShowCreate(true)}>
                 Create identity pool
-              </Button>
+              </ChalkButton>
             }
           >
             Cognito Identity Pools
-          </Header>
+          </ChalkHeader>
         }
         items={items}
         columnDefinitions={[
@@ -116,14 +104,14 @@ export default function IdentityPools() {
             id: 'name',
             header: 'Pool Name',
             cell: (item) => (
-              <Link
+              <ChalkLink
                 onFollow={(e) => {
                   e.preventDefault();
                   navigate(`/cognito/identity-pools/${item.IdentityPoolId}`);
                 }}
               >
                 {item.IdentityPoolName}
-              </Link>
+              </ChalkLink>
             ),
             sortingField: 'IdentityPoolName',
           },
@@ -136,68 +124,68 @@ export default function IdentityPools() {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <Button variant="inline-link" onClick={() => setDeletePool(item)}>
+              <ChalkButton variant="inline-link" onClick={() => setDeletePool(item)}>
                 Delete
-              </Button>
+              </ChalkButton>
             ),
           },
         ]}
         filter={
-          <TextFilter {...filterProps} filteringPlaceholder="Find identity pools" />
+          <ChalkTextFilter {...filterProps} filteringPlaceholder="Find identity pools" />
         }
         empty={
-          <Box textAlign="center" color="inherit">
+          <ChalkBox textAlign="center" color="inherit">
             <b>No identity pools</b>
-          </Box>
+          </ChalkBox>
         }
       />
 
-      <Modal
+      <ChalkModal
         visible={showCreate}
         onDismiss={() => setShowCreate(false)}
         header="Create identity pool"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowCreate(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowCreate(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleCreate} loading={creating} disabled={!createName}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleCreate} loading={creating} disabled={!createName}>
                 Create
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="l">
-          <FormField label="Identity pool name">
-            <Input value={createName} onChange={({ detail }) => setCreateName(detail.value)} placeholder="my-identity-pool" />
-          </FormField>
-          <Checkbox checked={allowUnauth} onChange={({ detail }) => setAllowUnauth(detail.checked)}>
+        <ChalkSpaceBetween size="l">
+          <ChalkFormField label="Identity pool name">
+            <ChalkInput value={createName} onChange={({ detail }) => setCreateName(detail.value)} placeholder="my-identity-pool" />
+          </ChalkFormField>
+          <ChalkCheckbox checked={allowUnauth} onChange={({ detail }) => setAllowUnauth(detail.checked)}>
             Allow unauthenticated identities
-          </Checkbox>
-        </SpaceBetween>
-      </Modal>
+          </ChalkCheckbox>
+        </ChalkSpaceBetween>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={deletePool !== null}
         onDismiss={() => setDeletePool(null)}
         header="Delete identity pool"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeletePool(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDeletePool(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} loading={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete identity pool <b>{deletePool?.IdentityPoolName}</b>?
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

@@ -34,7 +34,7 @@ export function listBucketsXml(bucketEntries: Array<{ name: string; creationDate
   const bucketElements = bucketEntries
     .map((b) => `<Bucket><Name>${escapeXml(b.name)}</Name><CreationDate>${b.creationDate}</CreationDate><BucketRegion>${REGION}</BucketRegion><BucketArn>arn:aws:s3:::${escapeXml(b.name)}</BucketArn></Bucket>`)
     .join('');
-  return `<?xml version="1.0" encoding="UTF-8"?><ListAllMyBucketsResult xmlns="${NS}"><Owner><ID>naws-owner-id</ID><DisplayName>naws-user</DisplayName></Owner><Buckets>${bucketElements}</Buckets></ListAllMyBucketsResult>`;
+  return `<?xml version="1.0" encoding="UTF-8"?><ListAllMyBucketsResult xmlns="${NS}"><Owner><ID>mockcloud-owner-id</ID><DisplayName>mockcloud-user</DisplayName></Owner><Buckets>${bucketElements}</Buckets></ListAllMyBucketsResult>`;
 }
 
 export function listObjectsV2Xml(
@@ -78,7 +78,7 @@ export function taggingXml(tags: Record<string, string>): string {
 }
 
 export function aclXml(): string {
-  return `<?xml version="1.0" encoding="UTF-8"?><AccessControlPolicy xmlns="${NS}"><Owner><ID>naws-owner-id</ID><DisplayName>naws-user</DisplayName></Owner><AccessControlList><Grant><Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser"><ID>naws-owner-id</ID><DisplayName>naws-user</DisplayName></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>`;
+  return `<?xml version="1.0" encoding="UTF-8"?><AccessControlPolicy xmlns="${NS}"><Owner><ID>mockcloud-owner-id</ID><DisplayName>mockcloud-user</DisplayName></Owner><AccessControlList><Grant><Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser"><ID>mockcloud-owner-id</ID><DisplayName>mockcloud-user</DisplayName></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>`;
 }
 
 export function corsXml(): string {

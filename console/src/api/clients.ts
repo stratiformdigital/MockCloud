@@ -15,7 +15,7 @@ import { SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
 import { WAFV2Client } from '@aws-sdk/client-wafv2';
 
 export const ENDPOINT = 'http://localhost:4444';
-const CREDENTIALS = { accessKeyId: 'AKIANAWSEXAMPLEKEY00', secretAccessKey: 'naws-secret-key' };
+const CREDENTIALS = { accessKeyId: 'AKIANAWSEXAMPLEKEY00', secretAccessKey: 'mockcloud-secret-key' };
 const REGION = 'us-east-1';
 
 const config = { endpoint: ENDPOINT, credentials: CREDENTIALS, region: REGION };

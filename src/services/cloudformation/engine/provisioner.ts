@@ -159,7 +159,7 @@ export async function provision(
 
       const resolvedProps = resolveProperties(resource.Properties, intrinsicContext);
       if (resource.Type === 'AWS::CloudFormation::CustomResource' || resource.Type.startsWith('Custom::')) {
-        resolvedProps.__nawsResourceType = resource.Type;
+        resolvedProps.__mockcloudResourceType = resource.Type;
       }
 
       const existing = existingResources.get(logicalId);

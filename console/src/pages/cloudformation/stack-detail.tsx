@@ -1,17 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Header from '@cloudscape-design/components/header';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import Tabs from '@cloudscape-design/components/tabs';
-import Table from '@cloudscape-design/components/table';
-import Container from '@cloudscape-design/components/container';
-import ColumnLayout from '@cloudscape-design/components/column-layout';
-import Box from '@cloudscape-design/components/box';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Button from '@cloudscape-design/components/button';
-import StatusIndicator from '@cloudscape-design/components/status-indicator';
-import Spinner from '@cloudscape-design/components/spinner';
-import Link from '@cloudscape-design/components/link';
+import { ChalkHeader, ChalkBreadcrumbs, ChalkTabs, ChalkTable, ChalkContainer, ChalkColumnLayout, ChalkBox, ChalkSpaceBetween, ChalkButton, ChalkStatusIndicator, ChalkSpinner, ChalkLink } from '../../chalk';
 import {
   DescribeStacksCommand,
   ListStackResourcesCommand,
@@ -43,7 +32,7 @@ function formatDate(d: Date | undefined): string {
 function KeyValue({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <Box variant="awsui-key-label">{label}</Box>
+      <ChalkBox variant="awsui-key-label">{label}</ChalkBox>
       <div>{children}</div>
     </div>
   );
@@ -109,33 +98,33 @@ export default function StackDetail() {
     navigate('/cloudformation');
   }
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Header variant="h1">Error: {error}</Header>;
-  if (!stack) return <Header variant="h1">Stack not found</Header>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkHeader variant="h1">Error: {error}</ChalkHeader>;
+  if (!stack) return <ChalkHeader variant="h1">Stack not found</ChalkHeader>;
 
   const outputs: Output[] = stack.Outputs ?? [];
   const parameters: Parameter[] = stack.Parameters ?? [];
 
   const overviewTab = (
-    <Container header={<Header variant="h2">Stack Info</Header>}>
-      <ColumnLayout columns={2} variant="text-grid">
+    <ChalkContainer header={<ChalkHeader variant="h2">Stack Info</ChalkHeader>}>
+      <ChalkColumnLayout columns={2} variant="text-grid">
         <KeyValue label="Stack Name">{stack.StackName}</KeyValue>
         <KeyValue label="Stack ID">{stack.StackId}</KeyValue>
         <KeyValue label="Status">
-          <StatusIndicator type={statusType(stack.StackStatus)}>
+          <ChalkStatusIndicator type={statusType(stack.StackStatus)}>
             {stack.StackStatus}
-          </StatusIndicator>
+          </ChalkStatusIndicator>
         </KeyValue>
         <KeyValue label="Description">{stack.Description ?? '-'}</KeyValue>
         <KeyValue label="Created">{formatDate(stack.CreationTime)}</KeyValue>
         <KeyValue label="Last Updated">{formatDate(stack.LastUpdatedTime)}</KeyValue>
-      </ColumnLayout>
-    </Container>
+      </ChalkColumnLayout>
+    </ChalkContainer>
   );
 
   const resourcesTab = (
-    <Table
-      header={<Header counter={`(${resources.length})`}>Resources</Header>}
+    <ChalkTable
+      header={<ChalkHeader counter={`(${resources.length})`}>Resources</ChalkHeader>}
       columnDefinitions={[
         { id: 'logical', header: 'Logical ID', cell: (r) => r.LogicalResourceId },
         { id: 'type', header: 'Type', cell: (r) => r.ResourceType },
@@ -143,9 +132,9 @@ export default function StackDetail() {
           id: 'status',
           header: 'Status',
           cell: (r) => (
-            <StatusIndicator type={statusType(r.ResourceStatus)}>
+            <ChalkStatusIndicator type={statusType(r.ResourceStatus)}>
               {r.ResourceStatus}
-            </StatusIndicator>
+            </ChalkStatusIndicator>
           ),
         },
         {
@@ -157,9 +146,9 @@ export default function StackDetail() {
             const toRoute = r.ResourceType ? resourceRoutes[r.ResourceType] : undefined;
             if (!toRoute) return pid;
             return (
-              <Link onFollow={(e) => { e.preventDefault(); navigate(toRoute(pid)); }}>
+              <ChalkLink onFollow={(e) => { e.preventDefault(); navigate(toRoute(pid)); }}>
                 {pid}
-              </Link>
+              </ChalkLink>
             );
           },
         },
@@ -169,8 +158,8 @@ export default function StackDetail() {
   );
 
   const outputsTab = (
-    <Table
-      header={<Header counter={`(${outputs.length})`}>Outputs</Header>}
+    <ChalkTable
+      header={<ChalkHeader counter={`(${outputs.length})`}>Outputs</ChalkHeader>}
       columnDefinitions={[
         { id: 'key', header: 'Key', cell: (o) => o.OutputKey },
         { id: 'value', header: 'Value', cell: (o) => o.OutputValue },
@@ -182,8 +171,8 @@ export default function StackDetail() {
   );
 
   const parametersTab = (
-    <Table
-      header={<Header counter={`(${parameters.length})`}>Parameters</Header>}
+    <ChalkTable
+      header={<ChalkHeader counter={`(${parameters.length})`}>Parameters</ChalkHeader>}
       columnDefinitions={[
         { id: 'key', header: 'Parameter Key', cell: (p) => p.ParameterKey },
         { id: 'value', header: 'Parameter Value', cell: (p) => p.ParameterValue },
@@ -194,8 +183,8 @@ export default function StackDetail() {
   );
 
   const eventsTab = (
-    <Table
-      header={<Header counter={`(${events.length})`}>Events</Header>}
+    <ChalkTable
+      header={<ChalkHeader counter={`(${events.length})`}>Events</ChalkHeader>}
       columnDefinitions={[
         { id: 'time', header: 'Timestamp', cell: (e) => formatDate(e.Timestamp) },
         { id: 'logical', header: 'Logical ID', cell: (e) => e.LogicalResourceId ?? '-' },
@@ -203,9 +192,9 @@ export default function StackDetail() {
           id: 'status',
           header: 'Status',
           cell: (e) => (
-            <StatusIndicator type={statusType(e.ResourceStatus)}>
+            <ChalkStatusIndicator type={statusType(e.ResourceStatus)}>
               {e.ResourceStatus}
-            </StatusIndicator>
+            </ChalkStatusIndicator>
           ),
         },
         { id: 'reason', header: 'Reason', cell: (e) => e.ResourceStatusReason ?? '-' },
@@ -219,7 +208,7 @@ export default function StackDetail() {
   })();
 
   const templateTab = (
-    <Container>
+    <ChalkContainer>
       <pre style={{
         whiteSpace: 'pre-wrap',
         maxHeight: '600px',
@@ -235,34 +224,33 @@ export default function StackDetail() {
       }}>
         {formattedTemplate}
       </pre>
-    </Container>
+    </ChalkContainer>
   );
 
   return (
-    <SpaceBetween size="l">
-      <BreadcrumbGroup
+    <ChalkSpaceBetween size="l">
+      <ChalkBreadcrumbs
         items={[
-          { text: 'NAWS', href: '/' },
+          { text: 'MockCloud', href: '/' },
           { text: 'CloudFormation', href: '/cloudformation' },
           { text: 'Stacks', href: '/cloudformation' },
           { text: stackName!, href: '#' },
         ]}
-        onFollow={(e) => {
-          e.preventDefault();
-          navigate(e.detail.href);
+        onNavigate={(href) => {
+          navigate(href);
         }}
       />
-      <Header
+      <ChalkHeader
         variant="h1"
         actions={
-          <Button variant="primary" onClick={handleDelete}>
+          <ChalkButton variant="primary" onClick={handleDelete}>
             Delete
-          </Button>
+          </ChalkButton>
         }
       >
         {stackName}
-      </Header>
-      <Tabs
+      </ChalkHeader>
+      <ChalkTabs
         tabs={[
           { label: 'Overview', id: 'overview', content: overviewTab },
           { label: 'Resources', id: 'resources', content: resourcesTab },
@@ -272,6 +260,6 @@ export default function StackDetail() {
           { label: 'Template', id: 'template', content: templateTab },
         ]}
       />
-    </SpaceBetween>
+    </ChalkSpaceBetween>
   );
 }

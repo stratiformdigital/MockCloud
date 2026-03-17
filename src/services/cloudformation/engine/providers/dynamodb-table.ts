@@ -9,7 +9,7 @@ async function dynamoFetch(action: string, body: Record<string, unknown>): Promi
     headers: {
       'Content-Type': 'application/x-amz-json-1.0',
       'X-Amz-Target': `DynamoDB_20120810.${action}`,
-      'Authorization': 'AWS4-HMAC-SHA256 Credential=AKIANAWSEXAMPLEKEY00/20260101/us-east-1/dynamodb/aws4_request, SignedHeaders=content-type;host;x-amz-target, Signature=naws',
+      'Authorization': 'AWS4-HMAC-SHA256 Credential=AKIANAWSEXAMPLEKEY00/20260101/us-east-1/dynamodb/aws4_request, SignedHeaders=content-type;host;x-amz-target, Signature=mockcloud',
     },
     body: JSON.stringify(body),
   });

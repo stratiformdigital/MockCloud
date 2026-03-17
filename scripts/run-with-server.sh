@@ -11,11 +11,11 @@ cleanup() {
 }
 trap cleanup EXIT
 
-PORT="${NAWS_TEST_PORT:-$(node -e "const net=require('node:net'); const server=net.createServer(); server.listen(0, 'localhost', () => { const address=server.address(); console.log(address.port); server.close(); });")}"
+PORT="${MOCKCLOUD_TEST_PORT:-$(node -e "const net=require('node:net'); const server=net.createServer(); server.listen(0, 'localhost', () => { const address=server.address(); console.log(address.port); server.close(); });")}"
 ENDPOINT="http://localhost:${PORT}"
 
-export NAWS_TEST_PORT="$PORT"
-export NAWS_TEST_ENDPOINT="$ENDPOINT"
+export MOCKCLOUD_TEST_PORT="$PORT"
+export MOCKCLOUD_TEST_ENDPOINT="$ENDPOINT"
 
 yarn tsx src/cli.ts serve --port "$PORT" &
 SERVER_PID=$!

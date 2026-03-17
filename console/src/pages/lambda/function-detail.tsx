@@ -7,20 +7,22 @@ import {
   UpdateFunctionConfigurationCommand,
   FunctionConfiguration,
 } from '@aws-sdk/client-lambda';
-import Header from '@cloudscape-design/components/header';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Container from '@cloudscape-design/components/container';
-import Tabs from '@cloudscape-design/components/tabs';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import Button from '@cloudscape-design/components/button';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import Textarea from '@cloudscape-design/components/textarea';
-import Modal from '@cloudscape-design/components/modal';
-import Box from '@cloudscape-design/components/box';
-import KeyValuePairs from '@cloudscape-design/components/key-value-pairs';
-import Table from '@cloudscape-design/components/table';
-import Spinner from '@cloudscape-design/components/spinner';
+import {
+  ChalkHeader,
+  ChalkSpaceBetween,
+  ChalkContainer,
+  ChalkTabs,
+  ChalkBreadcrumbs,
+  ChalkButton,
+  ChalkFormField,
+  ChalkInput,
+  ChalkTextarea,
+  ChalkModal,
+  ChalkBox,
+  ChalkKeyValuePairs,
+  ChalkTable,
+  ChalkSpinner,
+} from '../../chalk';
 import { lambda } from '../../api/clients';
 
 export default function FunctionDetail() {
@@ -122,58 +124,57 @@ export default function FunctionDetail() {
     }
   };
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Header variant="h1">Error: {error}</Header>;
-  if (!config) return <Header variant="h1">Function not found</Header>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkHeader variant="h1">Error: {error}</ChalkHeader>;
+  if (!config) return <ChalkHeader variant="h1">Function not found</ChalkHeader>;
 
   const envVars = config.Environment?.Variables ?? {};
 
   return (
-    <SpaceBetween size="l">
-      <BreadcrumbGroup
+    <ChalkSpaceBetween size="l">
+      <ChalkBreadcrumbs
         items={[
-          { text: 'NAWS', href: '/' },
+          { text: 'MockCloud', href: '/' },
           { text: 'Lambda', href: '/lambda' },
           { text: 'Functions', href: '/lambda' },
           { text: functionName!, href: '' },
         ]}
-        onFollow={(e) => {
-          e.preventDefault();
-          if (e.detail.href) navigate(e.detail.href);
+        onNavigate={(href) => {
+          if (href) navigate(href);
         }}
       />
-      <Header
+      <ChalkHeader
         variant="h1"
         actions={
-          <SpaceBetween direction="horizontal" size="xs">
-            <Button onClick={() => navigate(`/logs/log-groups/aws/lambda/${functionName}`)}>View logs</Button>
-            <Button onClick={() => setShowDelete(true)}>Delete</Button>
-            <Button variant="primary" onClick={invoke}>Invoke</Button>
-          </SpaceBetween>
+          <ChalkSpaceBetween direction="horizontal" size="xs">
+            <ChalkButton onClick={() => navigate(`/logs/log-groups/aws/lambda/${functionName}`)}>View logs</ChalkButton>
+            <ChalkButton onClick={() => setShowDelete(true)}>Delete</ChalkButton>
+            <ChalkButton variant="primary" onClick={invoke}>Invoke</ChalkButton>
+          </ChalkSpaceBetween>
         }
       >
         {functionName}
-      </Header>
-      <Tabs
+      </ChalkHeader>
+      <ChalkTabs
         tabs={[
           {
             label: 'Configuration',
             id: 'configuration',
             content: (
-              <SpaceBetween size="l">
-                <Container
+              <ChalkSpaceBetween size="l">
+                <ChalkContainer
                   header={
-                    <Header
+                    <ChalkHeader
                       variant="h2"
                       actions={
-                        <Button onClick={openEditModal}>Edit</Button>
+                        <ChalkButton onClick={openEditModal}>Edit</ChalkButton>
                       }
                     >
                       General configuration
-                    </Header>
+                    </ChalkHeader>
                   }
                 >
-                  <KeyValuePairs
+                  <ChalkKeyValuePairs
                     columns={2}
                     items={[
                       { label: 'Function ARN', value: config.FunctionArn ?? '-' },
@@ -185,10 +186,10 @@ export default function FunctionDetail() {
                       { label: 'Role', value: config.Role ?? '-' },
                     ]}
                   />
-                </Container>
+                </ChalkContainer>
                 {Object.keys(envVars).length > 0 && (
-                  <Container header={<Header variant="h2">Environment variables</Header>}>
-                    <Table
+                  <ChalkContainer header={<ChalkHeader variant="h2">Environment variables</ChalkHeader>}>
+                    <ChalkTable
                       variant="embedded"
                       columnDefinitions={[
                         { id: 'key', header: 'Key', cell: (item: { key: string; value: string }) => item.key },
@@ -197,32 +198,32 @@ export default function FunctionDetail() {
                       items={Object.entries(envVars).map(([k, v]) => ({ key: k, value: v }))}
                       sortingDisabled
                     />
-                  </Container>
+                  </ChalkContainer>
                 )}
-              </SpaceBetween>
+              </ChalkSpaceBetween>
             ),
           },
           {
             label: 'Test',
             id: 'test',
             content: (
-              <SpaceBetween size="l">
-                <Container header={<Header variant="h2">Test event</Header>}>
-                  <SpaceBetween size="m">
-                    <FormField label="Event JSON">
-                      <Textarea
+              <ChalkSpaceBetween size="l">
+                <ChalkContainer header={<ChalkHeader variant="h2">Test event</ChalkHeader>}>
+                  <ChalkSpaceBetween size="m">
+                    <ChalkFormField label="Event JSON">
+                      <ChalkTextarea
                         value={payload}
                         onChange={({ detail }) => setPayload(detail.value)}
                         rows={10}
                       />
-                    </FormField>
-                    <Button variant="primary" onClick={invoke} loading={invoking}>
+                    </ChalkFormField>
+                    <ChalkButton variant="primary" onClick={invoke} disabled={invoking}>
                       Invoke
-                    </Button>
-                  </SpaceBetween>
-                </Container>
+                    </ChalkButton>
+                  </ChalkSpaceBetween>
+                </ChalkContainer>
                 {response !== null && (
-                  <Container header={<Header variant="h2">Response</Header>}>
+                  <ChalkContainer header={<ChalkHeader variant="h2">Response</ChalkHeader>}>
                     <pre style={{
                       whiteSpace: 'pre-wrap',
                       wordBreak: 'break-all',
@@ -237,67 +238,67 @@ export default function FunctionDetail() {
                     }}>
                       {response}
                     </pre>
-                  </Container>
+                  </ChalkContainer>
                 )}
-              </SpaceBetween>
+              </ChalkSpaceBetween>
             ),
           },
         ]}
       />
 
-      <Modal
+      <ChalkModal
         visible={showDelete}
         onDismiss={() => setShowDelete(false)}
         header="Delete function"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowDelete(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowDelete(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} disabled={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{functionName}</b>? This action cannot be undone.
-      </Modal>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showEdit}
         onDismiss={() => setShowEdit(false)}
         header="Edit configuration"
         size="large"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowEdit(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowEdit(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleSaveConfig} loading={saving}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleSaveConfig} disabled={saving}>
                 Save
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="m">
-          <FormField label="Description">
-            <Input value={editDescription} onChange={({ detail }) => setEditDescription(detail.value)} />
-          </FormField>
-          <FormField label="Memory (MB)">
-            <Input value={editMemory} onChange={({ detail }) => setEditMemory(detail.value)} type="number" />
-          </FormField>
-          <FormField label="Timeout (seconds)">
-            <Input value={editTimeout} onChange={({ detail }) => setEditTimeout(detail.value)} type="number" />
-          </FormField>
-          <FormField label="Environment variables (JSON)">
-            <Textarea value={editEnvVars} onChange={({ detail }) => setEditEnvVars(detail.value)} rows={8} />
-          </FormField>
-        </SpaceBetween>
-      </Modal>
-    </SpaceBetween>
+        <ChalkSpaceBetween size="m">
+          <ChalkFormField label="Description">
+            <ChalkInput value={editDescription} onChange={({ detail }) => setEditDescription(detail.value)} />
+          </ChalkFormField>
+          <ChalkFormField label="Memory (MB)">
+            <ChalkInput value={editMemory} onChange={({ detail }) => setEditMemory(detail.value)} type="number" />
+          </ChalkFormField>
+          <ChalkFormField label="Timeout (seconds)">
+            <ChalkInput value={editTimeout} onChange={({ detail }) => setEditTimeout(detail.value)} type="number" />
+          </ChalkFormField>
+          <ChalkFormField label="Environment variables (JSON)">
+            <ChalkTextarea value={editEnvVars} onChange={({ detail }) => setEditEnvVars(detail.value)} rows={8} />
+          </ChalkFormField>
+        </ChalkSpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

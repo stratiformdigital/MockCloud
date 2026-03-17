@@ -35,7 +35,7 @@ function generateTokens(
   const sub = getUserAttribute(user, 'sub') ?? randomUUID();
   const iss = `https://cognito-idp.${REGION}.amazonaws.com/${userPoolId}`;
   const header = base64url(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
-  const sig = base64url('naws-mock-signature');
+  const sig = base64url('mockcloud-mock-signature');
 
   const idPayload: Record<string, unknown> = {
     sub,

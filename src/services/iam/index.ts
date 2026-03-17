@@ -57,7 +57,7 @@ export const iamService = defineMockService({
 
     GetUser: (req) => {
       const users = getUsersStore();
-      const name = str(req.body['UserName']) || 'naws-user';
+      const name = str(req.body['UserName']) || 'mockcloud-user';
       const user = users.get(name);
       if (!user) return iamError('NoSuchEntity', `User ${name} not found.`, 404);
 

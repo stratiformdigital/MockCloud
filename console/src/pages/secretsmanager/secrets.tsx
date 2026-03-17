@@ -1,17 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import Table from '@cloudscape-design/components/table';
-import Header from '@cloudscape-design/components/header';
-import TextFilter from '@cloudscape-design/components/text-filter';
-import Spinner from '@cloudscape-design/components/spinner';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import Textarea from '@cloudscape-design/components/textarea';
-import Box from '@cloudscape-design/components/box';
-import ExpandableSection from '@cloudscape-design/components/expandable-section';
-import { useCollection } from '@cloudscape-design/collection-hooks';
+import {
+  ChalkTable, ChalkHeader, ChalkTextFilter, ChalkSpinner, ChalkSpaceBetween,
+  ChalkButton, ChalkModal, ChalkFormField, ChalkInput, ChalkTextarea,
+  ChalkBox, ChalkExpandableSection, useChalkCollection,
+} from '../../chalk';
 import {
   ListSecretsCommand,
   GetSecretValueCommand,
@@ -47,7 +39,7 @@ function SecretValue({ secretId }: { secretId: string }) {
   }
 
   return (
-    <ExpandableSection
+    <ChalkExpandableSection
       headerText="Secret value"
       expanded={expanded}
       onChange={({ detail }) => {
@@ -56,13 +48,13 @@ function SecretValue({ secretId }: { secretId: string }) {
       }}
     >
       {loading ? (
-        <Spinner />
+        <ChalkSpinner />
       ) : error ? (
-        <Box color="text-status-error">{error}</Box>
+        <ChalkBox color="text-status-error">{error}</ChalkBox>
       ) : (
-        <Box variant="code">{value}</Box>
+        <ChalkBox variant="code">{value}</ChalkBox>
       )}
-    </ExpandableSection>
+    </ChalkExpandableSection>
   );
 }
 
@@ -169,7 +161,7 @@ export default function Secrets() {
     }
   };
 
-  const { items, filterProps, collectionProps } = useCollection(secrets, {
+  const { items, filterProps, collectionProps } = useChalkCollection(secrets, {
     filtering: {
       filteringFunction: (item, text) =>
         (item.Name ?? '').toLowerCase().includes(text.toLowerCase()),
@@ -177,27 +169,27 @@ export default function Secrets() {
     sorting: {},
   });
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Header variant="h1">Error: {error}</Header>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkHeader variant="h1">Error: {error}</ChalkHeader>;
 
   return (
-    <SpaceBetween size="l">
-      <Table
+    <ChalkSpaceBetween size="l">
+      <ChalkTable
         {...collectionProps}
         header={
-          <Header
+          <ChalkHeader
             variant="h1"
             counter={`(${secrets.length})`}
             actions={
-              <Button variant="primary" onClick={() => setShowCreate(true)}>
+              <ChalkButton variant="primary" onClick={() => setShowCreate(true)}>
                 Create secret
-              </Button>
+              </ChalkButton>
             }
           >
             Secrets Manager Secrets
-          </Header>
+          </ChalkHeader>
         }
-        filter={<TextFilter {...filterProps} filteringPlaceholder="Find secrets" />}
+        filter={<ChalkTextFilter {...filterProps} filteringPlaceholder="Find secrets" />}
         columnDefinitions={[
           {
             id: 'name',
@@ -230,14 +222,14 @@ export default function Secrets() {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <SpaceBetween direction="horizontal" size="xs">
-                <Button variant="inline-link" onClick={() => openEdit(item)}>
+              <ChalkSpaceBetween direction="horizontal" size="xs">
+                <ChalkButton variant="inline-link" onClick={() => openEdit(item)}>
                   Edit
-                </Button>
-                <Button variant="inline-link" onClick={() => setDeleteSecret(item)}>
+                </ChalkButton>
+                <ChalkButton variant="inline-link" onClick={() => setDeleteSecret(item)}>
                   Delete
-                </Button>
-              </SpaceBetween>
+                </ChalkButton>
+              </ChalkSpaceBetween>
             ),
           },
         ]}
@@ -246,81 +238,81 @@ export default function Secrets() {
         stickyHeader
       />
 
-      <Modal
+      <ChalkModal
         visible={showCreate}
         onDismiss={() => setShowCreate(false)}
         header="Create secret"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowCreate(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowCreate(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleCreate} loading={creating} disabled={!createName}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleCreate} loading={creating} disabled={!createName}>
                 Create
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="m">
-          <FormField label="Secret name">
-            <Input value={createName} onChange={({ detail }) => setCreateName(detail.value)} placeholder="my-secret" />
-          </FormField>
-          <FormField label="Secret value">
-            <Textarea value={createValue} onChange={({ detail }) => setCreateValue(detail.value)} rows={5} />
-          </FormField>
-          <FormField label="Description" description="Optional">
-            <Input value={createDescription} onChange={({ detail }) => setCreateDescription(detail.value)} />
-          </FormField>
-        </SpaceBetween>
-      </Modal>
+        <ChalkSpaceBetween size="m">
+          <ChalkFormField label="Secret name">
+            <ChalkInput value={createName} onChange={({ detail }) => setCreateName(detail.value)} placeholder="my-secret" />
+          </ChalkFormField>
+          <ChalkFormField label="Secret value">
+            <ChalkTextarea value={createValue} onChange={({ detail }) => setCreateValue(detail.value)} rows={5} />
+          </ChalkFormField>
+          <ChalkFormField label="Description" description="Optional">
+            <ChalkInput value={createDescription} onChange={({ detail }) => setCreateDescription(detail.value)} />
+          </ChalkFormField>
+        </ChalkSpaceBetween>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={editSecret !== null}
         onDismiss={() => setEditSecret(null)}
         header={`Edit ${editSecret?.Name ?? ''}`}
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setEditSecret(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setEditSecret(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleEdit} loading={saving} disabled={editLoading}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleEdit} loading={saving} disabled={editLoading}>
                 Save
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         {editLoading ? (
-          <Spinner />
+          <ChalkSpinner />
         ) : (
-          <FormField label="Secret value">
-            <Textarea value={editValue} onChange={({ detail }) => setEditValue(detail.value)} rows={5} />
-          </FormField>
+          <ChalkFormField label="Secret value">
+            <ChalkTextarea value={editValue} onChange={({ detail }) => setEditValue(detail.value)} rows={5} />
+          </ChalkFormField>
         )}
-      </Modal>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={deleteSecret !== null}
         onDismiss={() => setDeleteSecret(null)}
         header="Delete secret"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeleteSecret(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDeleteSecret(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} loading={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to permanently delete <b>{deleteSecret?.Name}</b>? This action cannot be undone.
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

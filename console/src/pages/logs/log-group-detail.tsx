@@ -1,14 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Header from '@cloudscape-design/components/header';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Table from '@cloudscape-design/components/table';
-import Box from '@cloudscape-design/components/box';
-import Button from '@cloudscape-design/components/button';
-import Spinner from '@cloudscape-design/components/spinner';
-import Modal from '@cloudscape-design/components/modal';
-import Input from '@cloudscape-design/components/input';
+import { ChalkHeader, ChalkBreadcrumbs, ChalkSpaceBetween, ChalkTable, ChalkBox, ChalkButton, ChalkSpinner, ChalkModal, ChalkInput } from '../../chalk';
 import {
   DescribeLogStreamsCommand,
   GetLogEventsCommand,
@@ -147,55 +139,57 @@ export default function LogGroupDetail() {
     ? events.filter((e) => (e.message ?? '').toLowerCase().includes(eventFilter.toLowerCase()))
     : events;
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Header variant="h1">Error: {error}</Header>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkHeader variant="h1">Error: {error}</ChalkHeader>;
 
   return (
-    <SpaceBetween size="l">
-      <BreadcrumbGroup
+    <ChalkSpaceBetween size="l">
+      <ChalkBreadcrumbs
         items={[
-          { text: 'NAWS', href: '/' },
+          { text: 'MockCloud', href: '/' },
           { text: 'CloudWatch Logs', href: '/logs' },
           { text: 'Log Groups', href: '/logs' },
           { text: logGroupName, href: '#' },
         ]}
-        onFollow={(e) => {
-          e.preventDefault();
-          if (e.detail.href !== '#') navigate(e.detail.href);
+        onNavigate={(href) => {
+          if (href !== '#') navigate(href);
         }}
       />
-      <Header
+      <ChalkHeader
         variant="h1"
         actions={
-          <Button onClick={() => setShowDeleteGroup(true)}>Delete log group</Button>
+          <ChalkButton onClick={() => setShowDeleteGroup(true)}>Delete log group</ChalkButton>
         }
       >
         {logGroupName}
-      </Header>
-      <Table
+      </ChalkHeader>
+      <ChalkTable
         header={
-          <Header
+          <ChalkHeader
             counter={`(${streams.length})`}
             actions={
-              <Button variant="icon" iconName="refresh" onClick={loadStreams} />
+              <ChalkButton variant="icon" iconName="refresh" onClick={loadStreams} />
             }
           >
             Log Streams
-          </Header>
+          </ChalkHeader>
         }
         items={streams}
-        selectionType="single"
-        selectedItems={streams.filter((s) => s.logStreamName === selectedStream)}
-        onSelectionChange={({ detail }) => {
-          const name = detail.selectedItems[0]?.logStreamName ?? null;
-          setSelectedStream(name);
-          if (!name) setEvents([]);
-        }}
         columnDefinitions={[
           {
             id: 'name',
             header: 'Stream Name',
-            cell: (item) => item.logStreamName ?? '-',
+            cell: (item) => (
+              <ChalkButton
+                variant="inline-link"
+                onClick={() => {
+                  setSelectedStream(item.logStreamName ?? null);
+                  if (!item.logStreamName) setEvents([]);
+                }}
+              >
+                {item.logStreamName ?? '-'}
+              </ChalkButton>
+            ),
             sortingField: 'logStreamName',
           },
           {
@@ -220,24 +214,24 @@ export default function LogGroupDetail() {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <Button variant="inline-link" onClick={() => setDeleteStream(item)}>
+              <ChalkButton variant="inline-link" onClick={() => setDeleteStream(item)}>
                 Delete
-              </Button>
+              </ChalkButton>
             ),
           },
         ]}
         empty={
-          <Box textAlign="center" color="inherit">
+          <ChalkBox textAlign="center" color="inherit">
             <b>No log streams</b>
-          </Box>
+          </ChalkBox>
         }
       />
       {selectedStream && (
-        <SpaceBetween size="s">
-          <Header
+        <ChalkSpaceBetween size="s">
+          <ChalkHeader
             variant="h2"
             actions={
-              <Button
+              <ChalkButton
                 variant="icon"
                 iconName="refresh"
                 onClick={() => loadEvents(selectedStream)}
@@ -245,21 +239,21 @@ export default function LogGroupDetail() {
             }
           >
             {selectedStream}
-          </Header>
-          <Input
+          </ChalkHeader>
+          <ChalkInput
             value={eventFilter}
             onChange={({ detail }) => setEventFilter(detail.value)}
             placeholder="Filter log events..."
             type="search"
           />
           {eventsLoading ? (
-            <Spinner size="large" />
+            <ChalkSpinner size="large" />
           ) : eventsError ? (
-            <Box color="text-status-error">{eventsError}</Box>
+            <ChalkBox color="text-status-error">{eventsError}</ChalkBox>
           ) : filteredEvents.length === 0 ? (
-            <Box textAlign="center" color="inherit">
+            <ChalkBox textAlign="center" color="inherit">
               <b>{eventFilter ? 'No matching log events' : 'No log events'}</b>
-            </Box>
+            </ChalkBox>
           ) : (
             <div
               style={{
@@ -283,48 +277,48 @@ export default function LogGroupDetail() {
               ))}
             </div>
           )}
-        </SpaceBetween>
+        </ChalkSpaceBetween>
       )}
 
-      <Modal
+      <ChalkModal
         visible={showDeleteGroup}
         onDismiss={() => setShowDeleteGroup(false)}
         header="Delete log group"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowDeleteGroup(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowDeleteGroup(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDeleteGroup} loading={deletingGroup}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDeleteGroup} loading={deletingGroup}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{logGroupName}</b>?
-      </Modal>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={deleteStream !== null}
         onDismiss={() => setDeleteStream(null)}
         header="Delete log stream"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeleteStream(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDeleteStream(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDeleteStream} loading={deletingStream}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDeleteStream} loading={deletingStream}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete stream <b>{deleteStream?.logStreamName}</b>?
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

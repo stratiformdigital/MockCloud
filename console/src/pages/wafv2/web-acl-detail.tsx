@@ -1,19 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Header from '@cloudscape-design/components/header';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Container from '@cloudscape-design/components/container';
-import KeyValuePairs from '@cloudscape-design/components/key-value-pairs';
-import Table from '@cloudscape-design/components/table';
-import Box from '@cloudscape-design/components/box';
-import Spinner from '@cloudscape-design/components/spinner';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import Select from '@cloudscape-design/components/select';
-import Flashbar from '@cloudscape-design/components/flashbar';
+import {
+  ChalkHeader, ChalkBreadcrumbs, ChalkSpaceBetween, ChalkContainer,
+  ChalkKeyValuePairs, ChalkTable, ChalkBox, ChalkSpinner, ChalkButton,
+  ChalkModal, ChalkFormField, ChalkInput, ChalkSelect, ChalkFlashbar,
+} from '../../chalk';
 import { GetWebACLCommand, DeleteWebACLCommand, UpdateWebACLCommand, WebACL, Rule } from '@aws-sdk/client-wafv2';
 import { wafv2 } from '../../api/clients';
 
@@ -189,14 +180,14 @@ export default function WebAclDetail() {
     }
   };
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Header variant="h1">Error: {error}</Header>;
-  if (!acl) return <Header variant="h1">Web ACL not found</Header>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkHeader variant="h1">Error: {error}</ChalkHeader>;
+  if (!acl) return <ChalkHeader variant="h1">Web ACL not found</ChalkHeader>;
 
   return (
-    <SpaceBetween size="l">
+    <ChalkSpaceBetween size="l">
       {flash.length > 0 && (
-        <Flashbar
+        <ChalkFlashbar
           items={flash.map((f, i) => ({
             type: f.type,
             content: f.content,
@@ -207,37 +198,36 @@ export default function WebAclDetail() {
         />
       )}
 
-      <BreadcrumbGroup
+      <ChalkBreadcrumbs
         items={[
-          { text: 'NAWS', href: '/' },
+          { text: 'MockCloud', href: '/' },
           { text: 'WAFv2', href: '/wafv2' },
           { text: 'Web ACLs', href: '/wafv2' },
           { text: name!, href: '#' },
         ]}
-        onFollow={(e) => {
-          e.preventDefault();
-          if (e.detail.href !== '#') navigate(e.detail.href);
+        onNavigate={(href) => {
+          if (href !== '#') navigate(href);
         }}
       />
-      <Header
+      <ChalkHeader
         variant="h1"
         actions={
-          <SpaceBetween direction="horizontal" size="xs">
-            <Button onClick={() => {
+          <ChalkSpaceBetween direction="horizontal" size="xs">
+            <ChalkButton onClick={() => {
               const current = acl.DefaultAction?.Allow ? 'Allow' : 'Block';
               setEditAction({ label: current, value: current });
               setShowEditAction(true);
             }}>
               Edit default action
-            </Button>
-            <Button onClick={() => setShowDelete(true)}>Delete</Button>
-          </SpaceBetween>
+            </ChalkButton>
+            <ChalkButton onClick={() => setShowDelete(true)}>Delete</ChalkButton>
+          </ChalkSpaceBetween>
         }
       >
         {acl.Name}
-      </Header>
-      <Container header={<Header variant="h2">Web ACL details</Header>}>
-        <KeyValuePairs
+      </ChalkHeader>
+      <ChalkContainer header={<ChalkHeader variant="h2">Web ACL details</ChalkHeader>}>
+        <ChalkKeyValuePairs
           columns={2}
           items={[
             { label: 'Name', value: acl.Name ?? '-' },
@@ -248,17 +238,17 @@ export default function WebAclDetail() {
             { label: 'Capacity', value: String(acl.Capacity ?? '-') },
           ]}
         />
-      </Container>
-      <Table
+      </ChalkContainer>
+      <ChalkTable
         header={
-          <Header
+          <ChalkHeader
             counter={`(${(acl.Rules ?? []).length})`}
             actions={
-              <Button onClick={() => setShowAddRule(true)}>Add rule</Button>
+              <ChalkButton onClick={() => setShowAddRule(true)}>Add rule</ChalkButton>
             }
           >
             Rules
-          </Header>
+          </ChalkHeader>
         }
         items={acl.Rules ?? []}
         columnDefinitions={[
@@ -282,45 +272,45 @@ export default function WebAclDetail() {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <Button variant="inline-link" onClick={() => setDeleteRule(item)}>
+              <ChalkButton variant="inline-link" onClick={() => setDeleteRule(item)}>
                 Delete
-              </Button>
+              </ChalkButton>
             ),
           },
         ]}
         empty={
-          <Box textAlign="center" color="inherit">
+          <ChalkBox textAlign="center" color="inherit">
             <b>No rules</b>
-          </Box>
+          </ChalkBox>
         }
       />
 
-      <Modal
+      <ChalkModal
         visible={showAddRule}
         onDismiss={() => setShowAddRule(false)}
         header="Add rule"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowAddRule(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowAddRule(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleAddRule} loading={addingRule} disabled={!addRuleName || !addRulePriority}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleAddRule} loading={addingRule} disabled={!addRuleName || !addRulePriority}>
                 Add
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="m">
-          <FormField label="Name">
-            <Input value={addRuleName} onChange={({ detail }) => setAddRuleName(detail.value)} placeholder="my-rule" />
-          </FormField>
-          <FormField label="Priority">
-            <Input value={addRulePriority} onChange={({ detail }) => setAddRulePriority(detail.value)} type="number" placeholder="0" />
-          </FormField>
-          <FormField label="Action">
-            <Select
+        <ChalkSpaceBetween size="m">
+          <ChalkFormField label="Name">
+            <ChalkInput value={addRuleName} onChange={({ detail }) => setAddRuleName(detail.value)} placeholder="my-rule" />
+          </ChalkFormField>
+          <ChalkFormField label="Priority">
+            <ChalkInput value={addRulePriority} onChange={({ detail }) => setAddRulePriority(detail.value)} type="number" placeholder="0" />
+          </ChalkFormField>
+          <ChalkFormField label="Action">
+            <ChalkSelect
               selectedOption={addRuleAction}
               onChange={({ detail }) => setAddRuleAction(detail.selectedOption as typeof addRuleAction)}
               options={[
@@ -328,49 +318,49 @@ export default function WebAclDetail() {
                 { label: 'Block', value: 'Block' },
               ]}
             />
-          </FormField>
-        </SpaceBetween>
-      </Modal>
+          </ChalkFormField>
+        </ChalkSpaceBetween>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={deleteRule !== null}
         onDismiss={() => setDeleteRule(null)}
         header="Delete rule"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeleteRule(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDeleteRule(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDeleteRule} loading={deletingRule}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDeleteRule} loading={deletingRule}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete rule <b>{deleteRule?.Name}</b>?
-      </Modal>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showEditAction}
         onDismiss={() => setShowEditAction(false)}
         header="Edit default action"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowEditAction(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowEditAction(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleEditAction} loading={savingAction}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleEditAction} loading={savingAction}>
                 Save
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <FormField label="Default Action">
-          <Select
+        <ChalkFormField label="Default Action">
+          <ChalkSelect
             selectedOption={editAction}
             onChange={({ detail }) => setEditAction(detail.selectedOption as typeof editAction)}
             options={[
@@ -378,28 +368,28 @@ export default function WebAclDetail() {
               { label: 'Block', value: 'Block' },
             ]}
           />
-        </FormField>
-      </Modal>
+        </ChalkFormField>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={showDelete}
         onDismiss={() => setShowDelete(false)}
         header="Delete Web ACL"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowDelete(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowDelete(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} loading={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete Web ACL <b>{acl.Name}</b>?
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

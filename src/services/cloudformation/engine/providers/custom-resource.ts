@@ -41,7 +41,7 @@ export const customResourceStates = new PersistentMap<string, CustomResourceStat
 function stripInternalProperties(properties: Record<string, unknown>): Record<string, unknown> {
   const clean: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(properties)) {
-    if (key.startsWith('__naws')) continue;
+    if (key.startsWith('__mockcloud')) continue;
     clean[key] = value;
   }
   return clean;
@@ -122,7 +122,7 @@ export const customResourceProvider: ResourceProvider = {
   async create(logicalId: string, properties: Record<string, unknown>, context: ProvisionContext): Promise<ProvisionResult> {
     const defaultPhysicalId = `${context.stackName}-${logicalId}-${randomUUID().slice(0, 8)}`;
     const serviceToken = requireLambdaServiceToken(properties.ServiceToken);
-    const resourceType = (properties.__nawsResourceType as string | undefined) ?? 'AWS::CloudFormation::CustomResource';
+    const resourceType = (properties.__mockcloudResourceType as string | undefined) ?? 'AWS::CloudFormation::CustomResource';
 
     const response = await invokeLambda(
       serviceToken,
@@ -154,7 +154,7 @@ export const customResourceProvider: ResourceProvider = {
   ): Promise<ProvisionResult> {
     const previous = customResourceStates.get(physicalId);
     const serviceToken = requireLambdaServiceToken(properties.ServiceToken);
-    const resourceType = (properties.__nawsResourceType as string | undefined)
+    const resourceType = (properties.__mockcloudResourceType as string | undefined)
       ?? previous?.resourceType
       ?? 'AWS::CloudFormation::CustomResource';
 

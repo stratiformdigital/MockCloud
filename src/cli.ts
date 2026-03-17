@@ -16,13 +16,13 @@ export function run(argv: string[]): void {
   const program = new Command();
 
   program
-    .name('naws')
+    .name('mockcloud')
     .description('Local AWS replacement with mock API backends')
     .version('0.1.0');
 
   program
     .command('serve', { isDefault: true })
-    .description('Start the NAWS server')
+    .description('Start the MockCloud server')
     .option('--port <n>', 'Port to listen on', '4444')
     .option('--region <region>', 'AWS region to simulate', 'us-east-1')
     .option('--verbose', 'Enable verbose logging', false)
@@ -58,7 +58,7 @@ export function run(argv: string[]): void {
 
   program
     .command('stop')
-    .description('Stop a running NAWS server')
+    .description('Stop a running MockCloud server')
     .action(() => {
       if (!existsSync(PID_FILE)) {
         console.log('No running server found.');
@@ -67,7 +67,7 @@ export function run(argv: string[]): void {
       const pid = parseInt(readFileSync(PID_FILE, 'utf-8').trim(), 10);
       try {
         process.kill(pid, 'SIGTERM');
-        console.log(`Stopped NAWS server (PID ${pid}).`);
+        console.log(`Stopped MockCloud server (PID ${pid}).`);
       } catch {
         console.log('Server was not running.');
       }
@@ -76,13 +76,13 @@ export function run(argv: string[]): void {
 
   program
     .command('env')
-    .description('Print AWS environment variables for NAWS')
-    .option('--port <n>', 'Port NAWS listens on', '4444')
+    .description('Print AWS environment variables for MockCloud')
+    .option('--port <n>', 'Port MockCloud listens on', '4444')
     .action((opts) => {
       const port = opts.port;
       console.log(`export AWS_ENDPOINT_URL=http://localhost:${port}`);
-      console.log('export AWS_ACCESS_KEY_ID=naws');
-      console.log('export AWS_SECRET_ACCESS_KEY=naws');
+      console.log('export AWS_ACCESS_KEY_ID=mockcloud');
+      console.log('export AWS_SECRET_ACCESS_KEY=mockcloud');
       console.log(`export AWS_DEFAULT_REGION=${REGION}`);
     });
 

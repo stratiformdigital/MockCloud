@@ -28,7 +28,7 @@ describe('S3', () => {
 
     await client.send(new CreateBucketCommand({ Bucket: bucketName }));
 
-    const testData = Buffer.from('Hello NAWS! Binary test: \x00\x01\x02\xff');
+    const testData = Buffer.from('Hello MockCloud! Binary test: \x00\x01\x02\xff');
     await client.send(new PutObjectCommand({
       Bucket: bucketName,
       Key: 'test-file.bin',

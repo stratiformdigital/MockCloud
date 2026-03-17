@@ -1,16 +1,16 @@
 {
-  "name": "naws",
+  "name": "mockcloud",
   "version": "0.1.0",
   "description": "A lightweight local mock of AWS services for development and testing",
   "license": "MIT",
   "author": "Jon Holman",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JonHolman/naws.git"
+    "url": "https://github.com/JonHolman/MockCloud.git"
   },
-  "homepage": "https://github.com/JonHolman/naws",
+  "homepage": "https://github.com/JonHolman/MockCloud",
   "bugs": {
-    "url": "https://github.com/JonHolman/naws/issues"
+    "url": "https://github.com/JonHolman/MockCloud/issues"
   },
   "keywords": [
     "aws",
@@ -63,6 +63,7 @@
     "@aws-sdk/client-sts": "^3.1009.0",
     "@aws-sdk/client-wafv2": "^3.1009.0",
     "@types/node": "^25.5.0",
+    "playwright": "^1.58.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"

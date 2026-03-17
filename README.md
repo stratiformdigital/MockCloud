@@ -1,18 +1,18 @@
-# Not AWS
+# MockCloud
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A lightweight local mock of AWS services for development and testing.
 
-**Warning:** NAWS has only been tested with a small set of applications. It implements just enough of each AWS service to get specific workloads running locally. Every unhandled API action returns an empty response, so SDK calls won't crash — they just won't do anything meaningful. Expect incomplete validation and simplified behavior compared to real AWS.
+**Warning:** MockCloud has only been tested with a small set of applications. It implements just enough of each AWS service to get specific workloads running locally. Every unhandled API action returns an empty response, so SDK calls won't crash — they just won't do anything meaningful. Expect incomplete validation and simplified behavior compared to real AWS.
 
 ## Installation
 
 **Prerequisites:** Node.js 20+, Java 11+ (for DynamoDB Local)
 
 ```sh
-git clone https://github.com/JonHolman/naws.git
-cd naws
+git clone https://github.com/JonHolman/MockCloud.git
+cd MockCloud
 yarn
 ```
 
@@ -36,7 +36,7 @@ import { S3Client, CreateBucketCommand } from '@aws-sdk/client-s3';
 const s3 = new S3Client({
   region: 'us-east-1',
   endpoint: 'http://localhost:4444',
-  credentials: { accessKeyId: 'naws', secretAccessKey: 'naws' },
+  credentials: { accessKeyId: 'mockcloud', secretAccessKey: 'mockcloud' },
   forcePathStyle: true,
 });
 
@@ -54,14 +54,14 @@ aws s3 mb s3://my-bucket
 
 | Command | Description |
 |---|---|
-| `./run start` | Start NAWS in the background (default) |
-| `./run stop` | Stop a running NAWS server |
+| `./run start` | Start MockCloud in the background (default) |
+| `./run stop` | Stop a running MockCloud server |
 | `./run reset` | Stop the server and delete all persisted state |
 | `./run env` | Print environment variables for the current shell |
 
 ### Configuring the AWS CLI
 
-To point the AWS CLI at NAWS for the current shell session:
+To point the AWS CLI at MockCloud for the current shell session:
 
 ```sh
 eval "$(./run env)"
@@ -71,7 +71,7 @@ This sets `AWS_ENDPOINT_URL`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and 
 
 ## Console
 
-NAWS includes a web management console at `http://localhost:4444` with UI for browsing and managing resources across all supported services.
+MockCloud includes a web management console at `http://localhost:4444` with UI for browsing and managing resources across all supported services.
 
 ## Supported Services
 
@@ -79,7 +79,7 @@ S3, DynamoDB, Lambda, CloudFormation, IAM, Cognito (User Pools + Identity Pools)
 
 ## CDK
 
-NAWS supports `cdk bootstrap` and `cdk deploy`:
+MockCloud supports `cdk bootstrap` and `cdk deploy`:
 
 ```sh
 eval "$(./run env)"

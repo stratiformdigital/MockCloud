@@ -1,6 +1,7 @@
 node_modules/
 dist/
 data/
+.dynamodb-local/
 dynamodb-local-metadata.json
 
 .DS_Store

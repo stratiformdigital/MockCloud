@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { debug, info } from '../../util/logger.js';
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
-const JAR_DIR = path.resolve(__dir, '../../../data/dynamodb-local');
+const JAR_DIR = path.resolve(__dir, '../../../.dynamodb-local');
 const JAR_PATH = path.join(JAR_DIR, 'DynamoDBLocal.jar');
 const DB_PATH = path.resolve(__dir, '../../../data/state');
 const DOWNLOAD_URL = 'https://d1ni2b6xgvw0s0.cloudfront.net/v2.x/dynamodb_local_latest.tar.gz';
@@ -38,7 +38,7 @@ async function findFreePort(): Promise<number> {
 }
 
 async function waitForReady(): Promise<void> {
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 60; i++) {
     try {
       const res = await fetch(`http://localhost:${port}`, {
         method: 'POST',
@@ -58,11 +58,13 @@ async function waitForReady(): Promise<void> {
   if (proc) proc.kill('SIGTERM');
   proc = null;
   port = 0;
-  throw new Error('DynamoDB Local failed to start within 9 seconds');
+  throw new Error('DynamoDB Local failed to start within 18 seconds');
 }
 
 export async function startDynamoLocal(): Promise<void> {
   info('Starting DynamoDB Local...');
+
+  fs.mkdirSync(DB_PATH, { recursive: true });
 
   if (!fs.existsSync(JAR_PATH)) {
     await download();

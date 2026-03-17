@@ -6,18 +6,20 @@ import {
   DeleteFunctionCommand,
   FunctionConfiguration,
 } from '@aws-sdk/client-lambda';
-import Table from '@cloudscape-design/components/table';
-import Header from '@cloudscape-design/components/header';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import TextFilter from '@cloudscape-design/components/text-filter';
-import Link from '@cloudscape-design/components/link';
-import Spinner from '@cloudscape-design/components/spinner';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Input from '@cloudscape-design/components/input';
-import Select from '@cloudscape-design/components/select';
-import Box from '@cloudscape-design/components/box';
+import {
+  ChalkTable,
+  ChalkHeader,
+  ChalkSpaceBetween,
+  ChalkTextFilter,
+  ChalkLink,
+  ChalkSpinner,
+  ChalkButton,
+  ChalkModal,
+  ChalkFormField,
+  ChalkInput,
+  ChalkSelect,
+  ChalkBox,
+} from '../../chalk';
 import { lambda } from '../../api/clients';
 
 const RUNTIME_OPTIONS = [
@@ -103,26 +105,26 @@ export default function Functions() {
     (f) => !filterText || f.FunctionName?.toLowerCase().includes(filterText.toLowerCase())
   );
 
-  if (loading) return <Spinner size="large" />;
+  if (loading) return <ChalkSpinner size="large" />;
 
   return (
-    <SpaceBetween size="l">
-      <Table
+    <ChalkSpaceBetween size="l">
+      <ChalkTable
         header={
-          <Header
+          <ChalkHeader
             counter={`(${filtered.length})`}
             actions={
-              <Button variant="primary" onClick={() => setShowCreate(true)}>
+              <ChalkButton variant="primary" onClick={() => setShowCreate(true)}>
                 Create function
-              </Button>
+              </ChalkButton>
             }
           >
             Functions
-          </Header>
+          </ChalkHeader>
         }
         items={filtered}
         filter={
-          <TextFilter
+          <ChalkTextFilter
             filteringPlaceholder="Find functions"
             filteringText={filterText}
             onChange={({ detail }) => setFilterText(detail.filteringText)}
@@ -133,14 +135,11 @@ export default function Functions() {
             id: 'name',
             header: 'Function Name',
             cell: (item) => (
-              <Link
-                onFollow={(e) => {
-                  e.preventDefault();
-                  navigate(`/lambda/functions/${item.FunctionName}`);
-                }}
+              <ChalkLink
+                onFollow={() => navigate(`/lambda/functions/${item.FunctionName}`)}
               >
                 {item.FunctionName}
-              </Link>
+              </ChalkLink>
             ),
             sortingField: 'FunctionName',
           },
@@ -157,86 +156,85 @@ export default function Functions() {
             id: 'actions',
             header: 'Actions',
             cell: (item) => (
-              <Button variant="inline-link" onClick={() => setDeleteFunc(item)}>
+              <ChalkButton variant="inline-link" onClick={() => setDeleteFunc(item)}>
                 Delete
-              </Button>
+              </ChalkButton>
             ),
           },
         ]}
         empty={
-          <SpaceBetween size="m" direction="vertical" alignItems="center">
+          <ChalkSpaceBetween size="m" direction="vertical" alignItems="center">
             <b>No functions</b>
-          </SpaceBetween>
+          </ChalkSpaceBetween>
         }
       />
 
-      <Modal
+      <ChalkModal
         visible={showCreate}
         onDismiss={() => setShowCreate(false)}
         header="Create function"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowCreate(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowCreate(false)}>
                 Cancel
-              </Button>
-              <Button
+              </ChalkButton>
+              <ChalkButton
                 variant="primary"
                 onClick={handleCreate}
-                loading={creating}
-                disabled={!createName || !createRole}
+                disabled={creating || !createName || !createRole}
               >
                 Create
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
-        <SpaceBetween size="m">
-          <FormField label="Function name">
-            <Input value={createName} onChange={({ detail }) => setCreateName(detail.value)} />
-          </FormField>
-          <FormField label="Runtime">
-            <Select
+        <ChalkSpaceBetween size="m">
+          <ChalkFormField label="Function name">
+            <ChalkInput value={createName} onChange={({ detail }) => setCreateName(detail.value)} />
+          </ChalkFormField>
+          <ChalkFormField label="Runtime">
+            <ChalkSelect
               selectedOption={createRuntime}
               onChange={({ detail }) => setCreateRuntime(detail.selectedOption as typeof createRuntime)}
               options={RUNTIME_OPTIONS}
             />
-          </FormField>
-          <FormField label="Handler">
-            <Input value={createHandler} onChange={({ detail }) => setCreateHandler(detail.value)} />
-          </FormField>
-          <FormField label="Role ARN">
-            <Input value={createRole} onChange={({ detail }) => setCreateRole(detail.value)} placeholder="arn:aws:iam::123456789012:role/my-role" />
-          </FormField>
-          <FormField label="Memory (MB)">
-            <Input value={createMemory} onChange={({ detail }) => setCreateMemory(detail.value)} type="number" />
-          </FormField>
-          <FormField label="Timeout (seconds)">
-            <Input value={createTimeout} onChange={({ detail }) => setCreateTimeout(detail.value)} type="number" />
-          </FormField>
-        </SpaceBetween>
-      </Modal>
+          </ChalkFormField>
+          <ChalkFormField label="Handler">
+            <ChalkInput value={createHandler} onChange={({ detail }) => setCreateHandler(detail.value)} />
+          </ChalkFormField>
+          <ChalkFormField label="Role ARN">
+            <ChalkInput value={createRole} onChange={({ detail }) => setCreateRole(detail.value)} placeholder="arn:aws:iam::123456789012:role/my-role" />
+          </ChalkFormField>
+          <ChalkFormField label="Memory (MB)">
+            <ChalkInput value={createMemory} onChange={({ detail }) => setCreateMemory(detail.value)} type="number" />
+          </ChalkFormField>
+          <ChalkFormField label="Timeout (seconds)">
+            <ChalkInput value={createTimeout} onChange={({ detail }) => setCreateTimeout(detail.value)} type="number" />
+          </ChalkFormField>
+        </ChalkSpaceBetween>
+      </ChalkModal>
 
-      <Modal
+      <ChalkModal
         visible={deleteFunc !== null}
         onDismiss={() => setDeleteFunc(null)}
         header="Delete function"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeleteFunc(null)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setDeleteFunc(null)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDelete} loading={deleting}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDelete} disabled={deleting}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{deleteFunc?.FunctionName}</b>?
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

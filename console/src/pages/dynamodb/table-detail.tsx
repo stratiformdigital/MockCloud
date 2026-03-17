@@ -9,19 +9,7 @@ import {
   TableDescription,
   AttributeValue,
 } from '@aws-sdk/client-dynamodb';
-import Header from '@cloudscape-design/components/header';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Container from '@cloudscape-design/components/container';
-import Tabs from '@cloudscape-design/components/tabs';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import Table from '@cloudscape-design/components/table';
-import Button from '@cloudscape-design/components/button';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import Textarea from '@cloudscape-design/components/textarea';
-import KeyValuePairs from '@cloudscape-design/components/key-value-pairs';
-import Spinner from '@cloudscape-design/components/spinner';
-import Box from '@cloudscape-design/components/box';
+import { ChalkHeader, ChalkSpaceBetween, ChalkContainer, ChalkTabs, ChalkBreadcrumbs, ChalkTable, ChalkButton, ChalkModal, ChalkFormField, ChalkTextarea, ChalkKeyValuePairs, ChalkSpinner, ChalkBox } from '../../chalk';
 import { dynamodb } from '../../api/clients';
 
 function unmarshallValue(attr: AttributeValue): unknown {
@@ -182,9 +170,9 @@ export default function TableDetail() {
     }
   };
 
-  if (loading) return <Spinner size="large" />;
-  if (error) return <Header variant="h1">Error: {error}</Header>;
-  if (!tableInfo) return <Header variant="h1">Table not found</Header>;
+  if (loading) return <ChalkSpinner size="large" />;
+  if (error) return <ChalkHeader variant="h1">Error: {error}</ChalkHeader>;
+  if (!tableInfo) return <ChalkHeader variant="h1">Table not found</ChalkHeader>;
 
   const getKey = (type: 'HASH' | 'RANGE') => {
     const ks = tableInfo.KeySchema?.find((k) => k.KeyType === type);
@@ -198,37 +186,36 @@ export default function TableDetail() {
   const allColumns = Array.from(new Set(items.flatMap(Object.keys)));
 
   return (
-    <SpaceBetween size="l">
-      <BreadcrumbGroup
+    <ChalkSpaceBetween size="l">
+      <ChalkBreadcrumbs
         items={[
-          { text: 'NAWS', href: '/' },
+          { text: 'MockCloud', href: '/' },
           { text: 'DynamoDB', href: '/dynamodb' },
           { text: 'Tables', href: '/dynamodb' },
           { text: tableName!, href: '' },
         ]}
-        onFollow={(e) => {
-          e.preventDefault();
-          if (e.detail.href) navigate(e.detail.href);
+        onNavigate={(href) => {
+          if (href) navigate(href);
         }}
       />
-      <Header
+      <ChalkHeader
         variant="h1"
         actions={
-          <Button onClick={() => setShowDeleteTable(true)}>
+          <ChalkButton onClick={() => setShowDeleteTable(true)}>
             Delete table
-          </Button>
+          </ChalkButton>
         }
       >
         {tableName}
-      </Header>
-      <Tabs
+      </ChalkHeader>
+      <ChalkTabs
         tabs={[
           {
             label: 'Overview',
             id: 'overview',
             content: (
-              <Container header={<Header variant="h2">Table details</Header>}>
-                <KeyValuePairs
+              <ChalkContainer header={<ChalkHeader variant="h2">Table details</ChalkHeader>}>
+                <ChalkKeyValuePairs
                   columns={2}
                   items={[
                     { label: 'Table Name', value: tableInfo.TableName ?? '-' },
@@ -239,31 +226,31 @@ export default function TableDetail() {
                     { label: 'Item Count', value: String(tableInfo.ItemCount ?? 0) },
                   ]}
                 />
-              </Container>
+              </ChalkContainer>
             ),
           },
           {
             label: 'Items',
             id: 'items',
             content: scanning ? (
-              <Spinner size="large" />
+              <ChalkSpinner size="large" />
             ) : (
               <>
-                <Table
+                <ChalkTable
                   header={
-                    <Header
+                    <ChalkHeader
                       counter={`(${items.length})`}
                       actions={
-                        <Button variant="primary" onClick={() => {
+                        <ChalkButton variant="primary" onClick={() => {
                           setCreateJson('{}');
                           setShowCreate(true);
                         }}>
                           Create item
-                        </Button>
+                        </ChalkButton>
                       }
                     >
                       Items
-                    </Header>
+                    </ChalkHeader>
                   }
                   items={items}
                   columnDefinitions={[
@@ -278,99 +265,99 @@ export default function TableDetail() {
                       cell: (_item: Record<string, unknown>) => {
                         const idx = items.indexOf(_item);
                         return (
-                          <SpaceBetween direction="horizontal" size="xs">
-                            <Button variant="inline-link" onClick={() => openEdit(idx)}>
+                          <ChalkSpaceBetween direction="horizontal" size="xs">
+                            <ChalkButton variant="inline-link" onClick={() => openEdit(idx)}>
                               Edit
-                            </Button>
-                            <Button variant="inline-link" onClick={() => deleteItem(idx)}>
+                            </ChalkButton>
+                            <ChalkButton variant="inline-link" onClick={() => deleteItem(idx)}>
                               Delete
-                            </Button>
-                          </SpaceBetween>
+                            </ChalkButton>
+                          </ChalkSpaceBetween>
                         );
                       },
                     },
                   ]}
                   empty={
-                    <Box textAlign="center">
+                    <ChalkBox textAlign="center">
                       <b>No items</b>
-                    </Box>
+                    </ChalkBox>
                   }
                 />
-                <Modal
+                <ChalkModal
                   visible={showCreate}
                   onDismiss={() => setShowCreate(false)}
                   header="Create item"
                   footer={
-                    <Box float="right">
-                      <SpaceBetween direction="horizontal" size="xs">
-                        <Button variant="link" onClick={() => setShowCreate(false)}>
+                    <ChalkBox float="right">
+                      <ChalkSpaceBetween direction="horizontal" size="xs">
+                        <ChalkButton variant="link" onClick={() => setShowCreate(false)}>
                           Cancel
-                        </Button>
-                        <Button variant="primary" onClick={createItem}>
+                        </ChalkButton>
+                        <ChalkButton variant="primary" onClick={createItem}>
                           Create
-                        </Button>
-                      </SpaceBetween>
-                    </Box>
+                        </ChalkButton>
+                      </ChalkSpaceBetween>
+                    </ChalkBox>
                   }
                 >
-                  <FormField label="Item JSON">
-                    <Textarea
+                  <ChalkFormField label="Item JSON">
+                    <ChalkTextarea
                       value={createJson}
                       onChange={({ detail }) => setCreateJson(detail.value)}
                       rows={10}
                     />
-                  </FormField>
-                </Modal>
-                <Modal
+                  </ChalkFormField>
+                </ChalkModal>
+                <ChalkModal
                   visible={editIndex !== null}
                   onDismiss={() => setEditIndex(null)}
                   header="Edit item"
                   footer={
-                    <Box float="right">
-                      <SpaceBetween direction="horizontal" size="xs">
-                        <Button variant="link" onClick={() => setEditIndex(null)}>
+                    <ChalkBox float="right">
+                      <ChalkSpaceBetween direction="horizontal" size="xs">
+                        <ChalkButton variant="link" onClick={() => setEditIndex(null)}>
                           Cancel
-                        </Button>
-                        <Button variant="primary" onClick={saveEdit}>
+                        </ChalkButton>
+                        <ChalkButton variant="primary" onClick={saveEdit}>
                           Save
-                        </Button>
-                      </SpaceBetween>
-                    </Box>
+                        </ChalkButton>
+                      </ChalkSpaceBetween>
+                    </ChalkBox>
                   }
                 >
-                  <FormField label="Item JSON">
-                    <Textarea
+                  <ChalkFormField label="Item JSON">
+                    <ChalkTextarea
                       value={editJson}
                       onChange={({ detail }) => setEditJson(detail.value)}
                       rows={10}
                     />
-                  </FormField>
-                </Modal>
+                  </ChalkFormField>
+                </ChalkModal>
               </>
             ),
           },
         ]}
       />
 
-      <Modal
+      <ChalkModal
         visible={showDeleteTable}
         onDismiss={() => setShowDeleteTable(false)}
         header="Delete table"
         footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setShowDeleteTable(false)}>
+          <ChalkBox float="right">
+            <ChalkSpaceBetween direction="horizontal" size="xs">
+              <ChalkButton variant="link" onClick={() => setShowDeleteTable(false)}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleDeleteTable} loading={deletingTable}>
+              </ChalkButton>
+              <ChalkButton variant="primary" onClick={handleDeleteTable} disabled={deletingTable}>
                 Delete
-              </Button>
-            </SpaceBetween>
-          </Box>
+              </ChalkButton>
+            </ChalkSpaceBetween>
+          </ChalkBox>
         }
       >
         Are you sure you want to delete <b>{tableName}</b>?
-      </Modal>
-    </SpaceBetween>
+      </ChalkModal>
+    </ChalkSpaceBetween>
   );
 }

@@ -264,7 +264,7 @@ exports.handler = (event, context, callback) => {
     const bucketName = `lambda-async-${timestamp}`;
     const objectKey = 'code/handler.zip';
     const functionName = `async-handler-${timestamp}`;
-    const markerPath = join(tmpdir(), `naws-lambda-event-${timestamp}.txt`);
+    const markerPath = join(tmpdir(), `mockcloud-lambda-event-${timestamp}.txt`);
 
     rmSync(markerPath, { force: true });
 
@@ -333,7 +333,7 @@ exports.handler = async (event) => {
     const bucketName = `lambda-dryrun-${timestamp}`;
     const objectKey = 'code/handler.zip';
     const functionName = `dryrun-handler-${timestamp}`;
-    const markerPath = join(tmpdir(), `naws-lambda-dryrun-${timestamp}.txt`);
+    const markerPath = join(tmpdir(), `mockcloud-lambda-dryrun-${timestamp}.txt`);
 
     rmSync(markerPath, { force: true });
 

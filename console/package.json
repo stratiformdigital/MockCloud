@@ -1,5 +1,5 @@
 {
-  "name": "naws-console",
+  "name": "mockcloud-console",
   "private": true,
   "type": "module",
   "scripts": {
@@ -24,9 +24,6 @@
     "@aws-sdk/client-secrets-manager": "^3",
     "@aws-sdk/client-ssm": "^3",
     "@aws-sdk/client-wafv2": "^3",
-    "@cloudscape-design/collection-hooks": "^1",
-    "@cloudscape-design/components": "^3",
-    "@cloudscape-design/global-styles": "^1",
     "react": "^19",
     "react-dom": "^19",
     "react-router-dom": "^7"

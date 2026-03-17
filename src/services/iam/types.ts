@@ -143,27 +143,3 @@ export function deleteRole(roleName: string): void {
   roles.delete(roleName);
 }
 
-function seed(): void {
-  if (roles.size > 0 || users.size > 0) return;
-
-  const now = new Date().toISOString();
-
-  const supportRole: StoredRole = {
-    RoleName: 'AWSServiceRoleForSupport',
-    RoleId: generateRoleId(),
-    Arn: roleArn('/aws-service-role/support.amazonaws.com/', 'AWSServiceRoleForSupport'),
-    Path: '/aws-service-role/support.amazonaws.com/',
-    AssumeRolePolicyDocument: JSON.stringify({
-      Version: '2012-10-17',
-      Statement: [{ Effect: 'Allow', Principal: { Service: 'support.amazonaws.com' }, Action: 'sts:AssumeRole' }],
-    }),
-    CreateDate: now,
-    Description: 'AWS Support service-linked role',
-    inlinePolicies: new Map(),
-    attachedPolicies: ['arn:aws:iam::aws:policy/aws-service-role/AWSSupportServiceRolePolicy'],
-  };
-  roles.set(supportRole.RoleName, supportRole);
-
-}
-
-seed();

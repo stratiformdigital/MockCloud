@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '@cloudscape-design/components/header';
-import Cards from '@cloudscape-design/components/cards';
-import Link from '@cloudscape-design/components/link';
-import Spinner from '@cloudscape-design/components/spinner';
-import Box from '@cloudscape-design/components/box';
+import { ChalkHeader, ChalkCards, ChalkLink, ChalkSpinner, ChalkBox } from '../../chalk';
 import { ListStacksCommand, StackStatus } from '@aws-sdk/client-cloudformation';
 import { ListFunctionsCommand } from '@aws-sdk/client-lambda';
 import { ListTablesCommand } from '@aws-sdk/client-dynamodb';
@@ -206,43 +202,27 @@ export default function Home() {
 
   return (
     <>
-      <Header variant="h1" description="Local AWS Environment">
-        NAWS Console
-      </Header>
-      <Cards
-        cardDefinition={{
-          header: (item) =>
-            item.href ? (
-              <Link
-                fontSize="heading-m"
-                onFollow={(e) => {
-                  e.preventDefault();
-                  navigate(item.href);
-                }}
-              >
+      <ChalkHeader variant="h1">MockCloud</ChalkHeader>
+      {loading && cards.every((c) => c.count === null) ? (
+        <ChalkSpinner />
+      ) : (
+        <div className="chalk-home-list">
+          {cards.filter((item) => item.count === null || item.count !== 0).map((item) => (
+            <div
+              key={item.name}
+              className="chalk-home-row"
+              onClick={() => navigate(item.href)}
+            >
+              <span className="chalk-home-service">
                 {item.name}
-              </Link>
-            ) : (
-              <Box fontSize="heading-m" fontWeight="bold">{item.name}</Box>
-            ),
-          sections: [
-            {
-              id: 'count',
-              content: (item) =>
-                item.count === null ? (
-                  <Spinner />
-                ) : item.count === -1 ? (
-                  <Box color="text-status-error">Error loading</Box>
-                ) : (
-                  <Box variant="h1">{item.count}</Box>
-                ),
-            },
-          ],
-        }}
-        items={cards}
-        loading={loading && cards.every((c) => c.count === null)}
-        loadingText="Loading services"
-      />
+              </span>
+              <span className="chalk-home-count">
+                {item.count === null ? '...' : item.count === -1 ? 'error' : item.count}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
