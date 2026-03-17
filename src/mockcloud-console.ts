@@ -22,10 +22,10 @@ const MIME_TYPES: Record<string, string> = {
 };
 
 export function createMockCloudConsoleMiddleware(): Middleware {
-  const distExists = existsSync(DIST_DIR);
+  let distReady = existsSync(DIST_DIR);
 
   return async (req: IncomingMessage, res: ServerResponse, next: () => Promise<void>): Promise<void> => {
-    if (!distExists) {
+    if (!distReady && !(distReady = existsSync(DIST_DIR))) {
       await next();
       return;
     }

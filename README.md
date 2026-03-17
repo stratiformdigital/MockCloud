@@ -6,12 +6,16 @@ A lightweight local mock of AWS services for development and testing.
 
 **Warning:** MockCloud has only been tested with a small set of applications. It implements just enough of each AWS service to get specific workloads running locally. Every unhandled API action returns an empty response, so SDK calls won't crash — they just won't do anything meaningful. Expect incomplete validation and simplified behavior compared to real AWS.
 
+## Demo
+
+https://github.com/stratiformdigital/MockCloud/raw/refs/heads/main/demo.mp4
+
 ## Installation
 
 **Prerequisites:** Node.js 20+, Java 11+ (for DynamoDB Local)
 
 ```sh
-git clone https://github.com/JonHolman/MockCloud.git
+git clone https://github.com/stratiformdigital/MockCloud.git
 cd MockCloud
 yarn
 ```

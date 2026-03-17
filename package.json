@@ -6,11 +6,11 @@
   "author": "Jon Holman",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JonHolman/MockCloud.git"
+    "url": "https://github.com/stratiformdigital/MockCloud.git"
   },
-  "homepage": "https://github.com/JonHolman/MockCloud",
+  "homepage": "https://github.com/stratiformdigital/MockCloud",
   "bugs": {
-    "url": "https://github.com/JonHolman/MockCloud/issues"
+    "url": "https://github.com/stratiformdigital/MockCloud/issues"
   },
   "keywords": [
     "aws",

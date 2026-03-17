@@ -1,8 +1,4 @@
-# MockCloud Terminal Demo
-# Prerequisites: run scripts/record-terminal-setup.sh first
-# Then: cd ~/temp && vhs path/to/scripts/record-terminal-demo.tape
-
-Output demo.gif
+Output demo.mp4
 
 Set Shell "zsh"
 Set FontSize 16
@@ -12,13 +8,17 @@ Set Padding 20
 Set TypingSpeed 40ms
 
 # Clone and install
-Type "git clone https://github.com/JonHolman/MockCloud.git && cd MockCloud"
+Type "git clone https://github.com/stratiformdigital/MockCloud.git && cd MockCloud"
 Enter
 Sleep 5
 
 Type "yarn"
 Enter
 Sleep 5
+
+Type "cd console && yarn install && yarn build && cd .."
+Enter
+Sleep 8
 
 # Start the server
 Type "./run start"

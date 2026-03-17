@@ -146,8 +146,6 @@ async function dispatchHandler(
   if (handler) {
     if (action && service.handlers[action]) {
       debug(`${service.name}.${action} → handler`);
-    } else {
-      info(`${service.name}.${action || parsed.path} → unhandled, returning empty response`);
     }
     const response = await handler(parsed);
     if (response.headers) {
