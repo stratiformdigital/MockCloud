@@ -35,17 +35,20 @@ export function run(argv: string[]): void {
 
       setVerbose(config.verbose);
 
+      await startServer(config);
+
       const consoleDir = resolve(__dirname, '..', 'console');
       const distIndex = resolve(consoleDir, 'dist', 'index.html');
       const srcDir = resolve(consoleDir, 'src');
       const needsBuild = !existsSync(distIndex) ||
         statSync(srcDir).mtimeMs > statSync(distIndex).mtimeMs;
       if (needsBuild) {
-        console.log('Building console...');
-        execSync('yarn build', { cwd: consoleDir, stdio: 'inherit' });
+        try {
+          execSync('yarn install && yarn build', { cwd: consoleDir, stdio: 'ignore' });
+        } catch {
+          console.error('Console build failed. The API is running but the web console will not be available.');
+        }
       }
-
-      await startServer(config);
     });
 
   program

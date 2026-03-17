@@ -103,6 +103,15 @@ export function stopDynamoLocal(): void {
   }
 }
 
+export async function waitForDynamoLocal(): Promise<number> {
+  if (port) return port;
+  for (let i = 0; i < 120; i++) {
+    if (port) return port;
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  throw new Error('DynamoDB Local is not started');
+}
+
 export function getDynamoLocalPort(): number {
   if (!port) throw new Error('DynamoDB Local is not started');
   return port;

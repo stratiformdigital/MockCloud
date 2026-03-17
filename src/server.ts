@@ -1,5 +1,5 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
-import { writeFileSync, readFileSync, unlinkSync, existsSync } from 'node:fs';
+import { writeFileSync, readFileSync, unlinkSync, existsSync, mkdirSync } from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { ServerConfig } from './types.js';
@@ -13,6 +13,7 @@ import { getAllMockServices } from './services/registry.js';
 export const PID_FILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../data/mockcloud.pid');
 
 export async function startServer(config: ServerConfig): Promise<void> {
+  mkdirSync(path.dirname(PID_FILE), { recursive: true });
   if (existsSync(PID_FILE)) {
     const pid = parseInt(readFileSync(PID_FILE, 'utf-8').trim(), 10);
     try {
@@ -28,8 +29,6 @@ export async function startServer(config: ServerConfig): Promise<void> {
   const handleRequest = createRouter(config, [consoleMiddleware]);
 
   setBaseUrl(`http://localhost:${config.port}`);
-
-  await startDynamoLocal();
 
   const server = createServer(
     (req, res) => {
@@ -57,13 +56,14 @@ export async function startServer(config: ServerConfig): Promise<void> {
   process.on('SIGTERM', shutdown);
 
   return new Promise<void>((resolve) => {
-    server.listen(config.port, () => {
+    server.listen(config.port, async () => {
       const serviceCount = getAllMockServices().length;
       info(`MockCloud Server running at http://localhost:${config.port}`);
       info(`Region: ${config.region}, ${serviceCount} services`);
       info(`  AWS CLI: aws --profile mockcloud <service> <command>`);
       writeFileSync(PID_FILE, String(process.pid));
       resolve();
+      await startDynamoLocal();
     });
   });
 }

@@ -1,5 +1,5 @@
 import type { MockServiceDefinition, ParsedApiRequest, ApiResponse } from '../../types.js';
-import { getDynamoLocalPort } from './local.js';
+import { waitForDynamoLocal } from './local.js';
 import { getBaseUrl } from '../../server-url.js';
 
 function describeEndpoints(): ApiResponse {
@@ -16,7 +16,7 @@ function describeEndpoints(): ApiResponse {
 }
 
 async function proxy(req: ParsedApiRequest): Promise<ApiResponse> {
-  const port = getDynamoLocalPort();
+  const port = await waitForDynamoLocal();
   const res = await fetch(`http://localhost:${port}`, {
     method: 'POST',
     headers: {

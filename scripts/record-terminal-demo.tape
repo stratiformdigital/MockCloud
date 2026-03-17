@@ -3,21 +3,16 @@
 
 Output demo.gif
 
-Set Shell "bash"
+Set Shell "zsh"
 Set FontSize 16
 Set Width 1000
 Set Height 600
 Set Padding 20
 Set TypingSpeed 40ms
 
-# Load environment (nvm, corepack, etc.)
+# Clean up any previous state
 Hide
-Type "source ~/.nvm/nvm.sh 2>/dev/null; source ~/.bash_profile 2>/dev/null; source ~/.bashrc 2>/dev/null; true"
-Enter
-Sleep 1
 Type "export YARN_ENABLE_PROGRESS_BARS=false AWS_PAGER="
-Enter
-Type "corepack enable 2>/dev/null; true"
 Enter
 Sleep 1
 Type "pkill -f DynamoDBLocal 2>/dev/null; true"
@@ -39,15 +34,6 @@ Sleep 8
 Type "yarn"
 Enter
 Sleep 15
-
-Hide
-Type "npx playwright install chromium 2>/dev/null; true"
-Enter
-Sleep 15
-Type "clear"
-Enter
-Sleep 1
-Show
 
 # Start the server
 Type "./run start"
@@ -89,11 +75,6 @@ Enter
 Type "  --billing-mode PAY_PER_REQUEST"
 Enter
 Sleep 3
-
-# Launch console demo recording
-Type "yarn tsx scripts/record-console-demo.ts"
-Enter
-Sleep 45
 
 # Web console
 Type 'echo "Web console available at http://localhost:4444"'

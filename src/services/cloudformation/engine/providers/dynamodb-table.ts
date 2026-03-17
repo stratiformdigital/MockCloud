@@ -1,9 +1,9 @@
 import type { ResourceProvider, ProvisionContext, ProvisionResult } from '../types.js';
-import { getDynamoLocalPort } from '../../../dynamodb/local.js';
+import { waitForDynamoLocal } from '../../../dynamodb/local.js';
 import { debug } from '../../../../util/logger.js';
 
 async function dynamoFetch(action: string, body: Record<string, unknown>): Promise<Record<string, unknown>> {
-  const port = getDynamoLocalPort();
+  const port = await waitForDynamoLocal();
   const res = await fetch(`http://localhost:${port}`, {
     method: 'POST',
     headers: {

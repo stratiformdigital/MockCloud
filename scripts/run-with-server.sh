@@ -36,4 +36,11 @@ if ! curl -sf "$ENDPOINT/health" > /dev/null 2>&1; then
   exit 1
 fi
 
+for i in $(seq 1 60); do
+  if curl -sf -X POST -H "X-Amz-Target: DynamoDB_20120810.ListTables" -H "Content-Type: application/x-amz-json-1.0" -d '{}' "$ENDPOINT" > /dev/null 2>&1; then
+    break
+  fi
+  sleep 0.5
+done
+
 "$@"
