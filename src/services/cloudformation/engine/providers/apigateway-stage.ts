@@ -11,14 +11,14 @@ export const apigatewayStageProvider: ResourceProvider = {
     createStage(restApiId, stageName, deploymentId);
 
     return {
-      physicalId: `${restApiId}/${stageName}`,
+      physicalId: stageName,
       attributes: {},
     };
   },
   update(physicalId: string, _logicalId: string, properties: Record<string, unknown>, _context: ProvisionContext): ProvisionResult {
     const restApiId = properties.RestApiId as string;
     const deploymentId = properties.DeploymentId as string;
-    const stageName = physicalId.split('/').pop()!;
+    const stageName = physicalId;
 
     const stageMap = stages.get(restApiId);
     const existing = stageMap?.get(stageName);
