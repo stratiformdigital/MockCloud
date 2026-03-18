@@ -519,7 +519,7 @@ describe('CloudFormation', () => {
           Properties: {
             FunctionName: functionName,
             Runtime: 'nodejs20.x',
-            Role: 'arn:aws:iam::123456789012:role/lambda-role',
+            Role: 'arn:aws:iam::000000000000:role/lambda-role',
             Handler: 'index.handler',
             Code: {
               S3Bucket: bucketName,
@@ -555,7 +555,7 @@ describe('CloudFormation', () => {
       }));
 
       expect(versions.Versions?.map((version) => version.Version)).toEqual(['$LATEST', '1']);
-      expect(versions.Versions?.[1]?.FunctionArn).toBe(`arn:aws:lambda:us-east-1:123456789012:function:${functionName}:1`);
+      expect(versions.Versions?.[1]?.FunctionArn).toBe(`arn:aws:lambda:us-east-1:000000000000:function:${functionName}:1`);
     } finally {
       await cf.send(new DeleteStackCommand({ StackName: stackName })).catch(() => undefined);
       await s3.send(new DeleteObjectCommand({ Bucket: bucketName, Key: objectKey })).catch(() => undefined);
@@ -581,7 +581,7 @@ describe('CloudFormation', () => {
           Properties: {
             FunctionName: functionName,
             Runtime: 'nodejs20.x',
-            Role: 'arn:aws:iam::123456789012:role/lambda-role',
+            Role: 'arn:aws:iam::000000000000:role/lambda-role',
             Handler: 'index.handler',
             Code: {
               S3Bucket: bucketName,
@@ -621,7 +621,7 @@ describe('CloudFormation', () => {
       }));
       expect(config.MaximumRetryAttempts).toBe(1);
       expect(config.MaximumEventAgeInSeconds).toBe(120);
-      expect(config.FunctionArn).toBe(`arn:aws:lambda:us-east-1:123456789012:function:${functionName}:$LATEST`);
+      expect(config.FunctionArn).toBe(`arn:aws:lambda:us-east-1:000000000000:function:${functionName}:$LATEST`);
 
       const configs = await lambda.send(new ListFunctionEventInvokeConfigsCommand({
         FunctionName: functionName,
@@ -654,7 +654,7 @@ describe('CloudFormation', () => {
           Properties: {
             FunctionName: functionName,
             Runtime: 'nodejs20.x',
-            Role: 'arn:aws:iam::123456789012:role/lambda-role',
+            Role: 'arn:aws:iam::000000000000:role/lambda-role',
             Handler: 'index.handler',
             Code: {
               S3Bucket: bucketName,
@@ -697,7 +697,7 @@ describe('CloudFormation', () => {
         Effect: 'Allow',
         Action: 'lambda:InvokeFunction',
         Principal: { Service: 's3.amazonaws.com' },
-        Resource: `arn:aws:lambda:us-east-1:123456789012:function:${functionName}`,
+        Resource: `arn:aws:lambda:us-east-1:000000000000:function:${functionName}`,
       });
       expect(document.Statement[0].Condition).toMatchObject({
         ArnLike: { 'AWS:SourceArn': sourceArn },
@@ -718,7 +718,7 @@ describe('CloudFormation', () => {
     const functionName = `cf-lambda-event-source-fn-${timestamp}`;
     const bucketName = `cf-lambda-event-source-code-${timestamp}`;
     const objectKey = 'code/handler.zip';
-    const eventSourceArn = `arn:aws:sqs:us-east-1:123456789012:cf-lambda-event-source-${timestamp}`;
+    const eventSourceArn = `arn:aws:sqs:us-east-1:000000000000:cf-lambda-event-source-${timestamp}`;
     const zipBody = await createLambdaZip('exports.handler = async () => ({ ok: true });');
     const templateBody = JSON.stringify({
       AWSTemplateFormatVersion: '2010-09-09',
@@ -728,7 +728,7 @@ describe('CloudFormation', () => {
           Properties: {
             FunctionName: functionName,
             Runtime: 'nodejs20.x',
-            Role: 'arn:aws:iam::123456789012:role/lambda-role',
+            Role: 'arn:aws:iam::000000000000:role/lambda-role',
             Handler: 'index.handler',
             Code: {
               S3Bucket: bucketName,
@@ -767,7 +767,7 @@ describe('CloudFormation', () => {
       }));
       expect(mappings.EventSourceMappings).toHaveLength(1);
       expect(mappings.EventSourceMappings?.[0]).toMatchObject({
-        FunctionArn: `arn:aws:lambda:us-east-1:123456789012:function:${functionName}`,
+        FunctionArn: `arn:aws:lambda:us-east-1:000000000000:function:${functionName}`,
         EventSourceArn: eventSourceArn,
         BatchSize: 5,
         State: 'Enabled',
@@ -920,8 +920,8 @@ describe('CloudFormation', () => {
         },
       },
     });
-    const originalRoleArn = 'arn:aws:iam::123456789012:role/original-role';
-    const updatedRoleArn = 'arn:aws:iam::123456789012:role/updated-role';
+    const originalRoleArn = 'arn:aws:iam::000000000000:role/original-role';
+    const updatedRoleArn = 'arn:aws:iam::000000000000:role/updated-role';
 
     await cf.send(new CreateStackCommand({
       StackName: stackName,

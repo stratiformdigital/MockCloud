@@ -7,7 +7,7 @@ describe('STS', () => {
 
   test('GetCallerIdentity returns valid identity', async () => {
     const result = await client.send(new GetCallerIdentityCommand({}));
-    expect(result.Account).toBe('123456789012');
+    expect(result.Account).toBe('000000000000');
     expect(result.Arn).toBeDefined();
     expect(result.UserId).toBeDefined();
   });

@@ -34,7 +34,7 @@ const TEMPLATE = JSON.stringify({
         FunctionName: { 'Fn::Sub': 'p2-${Env}-fn' },
         Runtime: 'nodejs20.x',
         Handler: 'index.handler',
-        Role: 'arn:aws:iam::123456789012:role/fake-role',
+        Role: 'arn:aws:iam::000000000000:role/fake-role',
       },
     },
     MyParam: {
@@ -84,7 +84,7 @@ const UPDATED_TEMPLATE = JSON.stringify({
         FunctionName: { 'Fn::Sub': 'p2-${Env}-fn' },
         Runtime: 'nodejs20.x',
         Handler: 'app.handler',
-        Role: 'arn:aws:iam::123456789012:role/updated-role',
+        Role: 'arn:aws:iam::000000000000:role/updated-role',
       },
     },
     MyParam: {

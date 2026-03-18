@@ -205,7 +205,7 @@ export default function Functions() {
             <ChalkInput value={createHandler} onChange={({ detail }) => setCreateHandler(detail.value)} />
           </ChalkFormField>
           <ChalkFormField label="Role ARN">
-            <ChalkInput value={createRole} onChange={({ detail }) => setCreateRole(detail.value)} placeholder="arn:aws:iam::123456789012:role/my-role" />
+            <ChalkInput value={createRole} onChange={({ detail }) => setCreateRole(detail.value)} placeholder="arn:aws:iam::000000000000:role/my-role" />
           </ChalkFormField>
           <ChalkFormField label="Memory (MB)">
             <ChalkInput value={createMemory} onChange={({ detail }) => setCreateMemory(detail.value)} type="number" />

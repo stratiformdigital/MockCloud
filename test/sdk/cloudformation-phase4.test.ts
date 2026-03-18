@@ -163,14 +163,14 @@ exports.handler = async () => ({
         MyCustom: {
           Type: 'Custom::MyThing',
           Properties: {
-            ServiceToken: `arn:aws:lambda:us-east-1:123456789012:function:${firstFunctionName}`,
+            ServiceToken: `arn:aws:lambda:us-east-1:000000000000:function:${firstFunctionName}`,
             Param1: 'value1',
           },
         },
         MyCustom2: {
           Type: 'AWS::CloudFormation::CustomResource',
           Properties: {
-            ServiceToken: `arn:aws:lambda:us-east-1:123456789012:function:${secondFunctionName}`,
+            ServiceToken: `arn:aws:lambda:us-east-1:000000000000:function:${secondFunctionName}`,
           },
         },
       },
@@ -195,7 +195,7 @@ exports.handler = async () => ({
       await lambda.send(new CreateFunctionCommand({
         FunctionName: firstFunctionName,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Code: {
           S3Bucket: codeBucket,
@@ -205,7 +205,7 @@ exports.handler = async () => ({
       await lambda.send(new CreateFunctionCommand({
         FunctionName: secondFunctionName,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Code: {
           S3Bucket: codeBucket,

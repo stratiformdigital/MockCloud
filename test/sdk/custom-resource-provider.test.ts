@@ -22,14 +22,14 @@ import {
 } from '../../src/services/lambda/state.js';
 
 const FUNCTION_NAME = 'custom-resource-handler';
-const SERVICE_TOKEN = `arn:aws:lambda:us-east-1:123456789012:function:${FUNCTION_NAME}`;
+const SERVICE_TOKEN = `arn:aws:lambda:us-east-1:000000000000:function:${FUNCTION_NAME}`;
 
 function makeLambdaFunction(): StoredFunction {
   return {
     functionName: FUNCTION_NAME,
     functionArn: makeFunctionArn(FUNCTION_NAME),
     runtime: 'nodejs20.x',
-    role: 'arn:aws:iam::123456789012:role/custom-resource',
+    role: 'arn:aws:iam::000000000000:role/custom-resource',
     handler: 'index.handler',
     codeSize: 0,
     description: '',
@@ -48,7 +48,7 @@ function makeLambdaFunction(): StoredFunction {
 const context: ProvisionContext = {
   stackName: 'unit-custom-stack',
   region: 'us-east-1',
-  accountId: '123456789012',
+  accountId: '000000000000',
   resolvedResources: new Map(),
 };
 

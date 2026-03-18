@@ -24,8 +24,8 @@ describe('MockCloud e2e smoke', () => {
     const sts = createSTSClient();
     const identity = await sts.send(new GetCallerIdentityCommand({}));
     expect(identity).toMatchObject({
-      Account: '123456789012',
-      Arn: 'arn:aws:iam::123456789012:user/mockcloud-user',
+      Account: '000000000000',
+      Arn: 'arn:aws:iam::000000000000:user/mockcloud-user',
       UserId: 'AIDANAWSEXAMPLEUSER',
     });
   });

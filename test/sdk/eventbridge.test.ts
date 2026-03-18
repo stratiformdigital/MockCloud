@@ -37,7 +37,7 @@ describe('EventBridge', () => {
       Rule: ruleName,
       Targets: [{
         Id: 'target1',
-        Arn: 'arn:aws:lambda:us-east-1:123456789012:function:test',
+        Arn: 'arn:aws:lambda:us-east-1:000000000000:function:test',
       }],
     }));
 

@@ -66,7 +66,7 @@ exports.handler = async (event) => ({
       await client.send(new CreateFunctionCommand({
         FunctionName: functionName,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Code: {
           S3Bucket: bucketName,
@@ -121,7 +121,7 @@ export async function handler(event) {
       await client.send(new CreateFunctionCommand({
         FunctionName: functionName,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Code: {
           S3Bucket: bucketName,
@@ -175,7 +175,7 @@ exports.handler = (event, context, callback) => {
       await client.send(new CreateFunctionCommand({
         FunctionName: functionName,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Code: {
           S3Bucket: bucketName,
@@ -230,7 +230,7 @@ exports.handler = (event, context, callback) => {
       await client.send(new CreateFunctionCommand({
         FunctionName: functionName,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Timeout: 2,
         Code: {
@@ -292,7 +292,7 @@ exports.handler = async (event) => {
       await client.send(new CreateFunctionCommand({
         FunctionName: functionName,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Timeout: 2,
         Code: {
@@ -360,7 +360,7 @@ exports.handler = async (event) => {
       await client.send(new CreateFunctionCommand({
         FunctionName: functionName,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Code: {
           S3Bucket: bucketName,
@@ -420,7 +420,7 @@ exports.handler = async (event, context) => {
       await client.send(new CreateFunctionCommand({
         FunctionName: functionName,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Timeout: 10,
         Code: {
@@ -477,7 +477,7 @@ exports.handler = async (event) => {
       await client.send(new CreateFunctionCommand({
         FunctionName: functionA,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Code: {
           S3Bucket: bucketName,
@@ -490,7 +490,7 @@ exports.handler = async (event) => {
       await client.send(new CreateFunctionCommand({
         FunctionName: functionB,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Code: {
           S3Bucket: bucketName,
@@ -562,7 +562,7 @@ exports.handler = async () => {
       await client.send(new CreateFunctionCommand({
         FunctionName: functionName,
         Runtime: 'nodejs20.x',
-        Role: 'arn:aws:iam::123456789012:role/lambda-role',
+        Role: 'arn:aws:iam::000000000000:role/lambda-role',
         Handler: 'index.handler',
         Timeout: 1,
         Code: {

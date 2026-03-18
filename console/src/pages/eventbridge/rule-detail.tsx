@@ -328,7 +328,7 @@ export default function RuleDetail() {
             <ChalkInput value={targetId} onChange={({ detail }) => setTargetId(detail.value)} placeholder="my-target" />
           </ChalkFormField>
           <ChalkFormField label="Target ARN">
-            <ChalkInput value={targetArn} onChange={({ detail }) => setTargetArn(detail.value)} placeholder="arn:aws:lambda:us-east-1:123456789012:function:my-function" />
+            <ChalkInput value={targetArn} onChange={({ detail }) => setTargetArn(detail.value)} placeholder="arn:aws:lambda:us-east-1:000000000000:function:my-function" />
           </ChalkFormField>
         </ChalkSpaceBetween>
       </ChalkModal>
