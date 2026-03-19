@@ -62,8 +62,10 @@ export const runCommand = (
   });
 };
 
+const shell = process.env.SHELL?.split('/').pop() ?? 'bash';
+
 export const runAppCommand = (prefix: string, cmd: string, cwd: string) =>
-  runCommand(prefix, ['zsh', '-lc', `nvm use > /dev/null && ${cmd}`], cwd);
+  runCommand(prefix, [shell, '-lc', `nvm use > /dev/null && ${cmd}`], cwd);
 
 export const nvmInstall = (cwd: string) =>
-  runCommand('nvm install', ['zsh', '-lc', 'nvm install'], cwd);
+  runCommand('nvm install', [shell, '-lc', 'nvm install'], cwd);
