@@ -41,24 +41,9 @@ cmd_start() {
   exit 1
 }
 
-cmd_stop() {
-  yarn tsx src/cli.ts stop
-}
-
-cmd_reset() {
-  if is_running; then
-    cmd_stop
-    sleep 1
-  fi
-  rm -rf data/state data/s3 data/mockcloud.pid data/mockcloud.log
-  echo "Data cleared."
-}
-
 case "${1:-start}" in
   start) cmd_start ;;
-  stop)  cmd_stop ;;
-  reset) cmd_reset ;;
-  serve|clear|env) yarn tsx src/cli.ts "$@" ;;
+  serve|clear|env|stop|reset) yarn tsx src/cli.ts "$@" ;;
   *)
     echo "Unknown command: $1"
     echo ""

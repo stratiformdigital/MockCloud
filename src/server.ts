@@ -12,6 +12,20 @@ import { getAllMockServices } from './services/registry.js';
 
 export const PID_FILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../data/mockcloud.pid');
 
+export function stopServer(): boolean {
+  if (!existsSync(PID_FILE)) {
+    return false;
+  }
+  const pid = parseInt(readFileSync(PID_FILE, 'utf-8').trim(), 10);
+  let stopped = false;
+  try {
+    process.kill(pid, 'SIGTERM');
+    stopped = true;
+  } catch {}
+  try { unlinkSync(PID_FILE); } catch {}
+  return stopped;
+}
+
 export async function startServer(config: ServerConfig): Promise<void> {
   mkdirSync(path.dirname(PID_FILE), { recursive: true });
   if (existsSync(PID_FILE)) {

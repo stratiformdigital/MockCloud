@@ -3,9 +3,9 @@ import { Command } from 'commander';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
-import { existsSync, readFileSync, statSync, unlinkSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { REGION } from './config.js';
-import { startServer, PID_FILE } from './server.js';
+import { startServer, stopServer } from './server.js';
 import { setVerbose } from './util/logger.js';
 import { clearAllState } from './state/store.js';
 import type { ServerConfig } from './types.js';
@@ -63,18 +63,20 @@ export function run(argv: string[]): void {
     .command('stop')
     .description('Stop a running MockCloud server')
     .action(() => {
-      if (!existsSync(PID_FILE)) {
+      if (stopServer()) {
+        console.log('Stopped MockCloud server.');
+      } else {
         console.log('No running server found.');
-        return;
       }
-      const pid = parseInt(readFileSync(PID_FILE, 'utf-8').trim(), 10);
-      try {
-        process.kill(pid, 'SIGTERM');
-        console.log(`Stopped MockCloud server (PID ${pid}).`);
-      } catch {
-        console.log('Server was not running.');
-      }
-      try { unlinkSync(PID_FILE); } catch {}
+    });
+
+  program
+    .command('reset')
+    .description('Stop server and clear all persisted state')
+    .action(async () => {
+      stopServer();
+      await clearAllState();
+      console.log('Server stopped and state cleared.');
     });
 
   program
