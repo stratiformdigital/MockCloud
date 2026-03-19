@@ -44,6 +44,7 @@ cmd_start() {
 case "${1:-start}" in
   start) cmd_start ;;
   serve|clear|env|stop|reset) yarn tsx src/cli.ts "$@" ;;
+  rhtp|hcbs|mcr|mfp|qmr|carts|seds) yarn tsx src/cli.ts mdct "$1" ;;
   *)
     echo "Unknown command: $1"
     echo ""
@@ -55,6 +56,14 @@ case "${1:-start}" in
     echo "  clear   Clear persisted state"
     echo "  serve   Start server in foreground"
     echo "  env     Print AWS environment variables"
+    echo ""
+    echo "  rhtp    Run MDCT RHTP application"
+    echo "  hcbs    Run MDCT HCBS application"
+    echo "  mcr     Run MDCT MCR application"
+    echo "  mfp     Run MDCT MFP application"
+    echo "  qmr     Run MDCT QMR application"
+    echo "  carts   Run MDCT CARTS application"
+    echo "  seds    Run MDCT SEDS application"
     exit 1
     ;;
 esac

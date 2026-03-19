@@ -41,6 +41,7 @@
     "@aws-sdk/client-cognito-identity-provider": "^3.1009.0",
     "@aws-sdk/lib-dynamodb": "^3.1009.0",
     "commander": "^14.0.3",
+    "dotenv": "^17.2.3",
     "jszip": "^3.10.1",
     "yaml": "^2.8.2"
   },

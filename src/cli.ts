@@ -91,6 +91,14 @@ export function run(argv: string[]): void {
       console.log(`export AWS_DEFAULT_REGION=${REGION}`);
     });
 
+  program
+    .command('mdct <app>')
+    .description('Run an MDCT application against MockCloud')
+    .action(async (app: string) => {
+      const { runMdctApp } = await import('./commands/mdct.js');
+      await runMdctApp(app);
+    });
+
   program.parse(argv);
 }
 
