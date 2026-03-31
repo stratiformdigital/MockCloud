@@ -2794,6 +2794,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"aws-cdk@npm:^2.243.0":
+  version: 2.1114.1
+  resolution: "aws-cdk@npm:2.1114.1"
+  bin:
+    cdk: bin/cdk
+  checksum: 10c0/267b4579ab4122faa488cfde37b9848f19039d4e9d4e36b22d41c7c36bc8083d430dc503324fb54599cb81e49c6d494ee523a3cde504420cf362e598e0bc744f
+  languageName: node
+  linkType: hard
+
 "balanced-match@npm:^4.0.2":
   version: 4.0.4
   resolution: "balanced-match@npm:4.0.4"
@@ -3641,6 +3650,7 @@ __metadata:
     "@aws-sdk/client-wafv2": "npm:^3.1009.0"
     "@aws-sdk/lib-dynamodb": "npm:^3.1009.0"
     "@types/node": "npm:^25.5.0"
+    aws-cdk: "npm:^2.243.0"
     aws-cdk-lib: "npm:^2.243.0"
     commander: "npm:^14.0.3"
     constructs: "npm:^10.5.1"
@@ -3650,7 +3660,7 @@ __metadata:
     tsx: "npm:^4.21.0"
     typescript: "npm:^5.9.3"
     vitest: "npm:^4.1.0"
-    yaml: "npm:^2.8.2"
+    yaml: "npm:^2.8.3"
   languageName: unknown
   linkType: soft
 
@@ -4369,11 +4379,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.8.2":
-  version: 2.8.2
-  resolution: "yaml@npm:2.8.2"
+"yaml@npm:^2.8.3":
+  version: 2.8.3
+  resolution: "yaml@npm:2.8.3"
   bin:
     yaml: bin.mjs
-  checksum: 10c0/703e4dc1e34b324aa66876d63618dcacb9ed49f7e7fe9b70f1e703645be8d640f68ab84f12b86df8ac960bac37acf5513e115de7c970940617ce0343c8c9cd96
+  checksum: 10c0/ddff0e11c1b467728d7eb4633db61c5f5de3d8e9373cf84d08fb0cdee03e1f58f02b9f1c51a4a8a865751695addbd465a77f73f1079be91fe5493b29c305fd77
   languageName: node
   linkType: hard
