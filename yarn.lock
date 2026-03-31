@@ -2794,6 +2794,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"aws-cdk@npm:^2.243.0":
+  version: 2.1114.0
+  resolution: "aws-cdk@npm:2.1114.0"
+  bin:
+    cdk: bin/cdk
+  checksum: 10c0/72f26c3f7c90efdcc88816be88acb826f17c41fe43c56c78eb8ab7fbe33378c90e166a5b29606a2cffe1e2a8a99404ce49722a08d2f4b8352832b809e86c49d0
+  languageName: node
+  linkType: hard
+
 "balanced-match@npm:^4.0.2":
   version: 4.0.4
   resolution: "balanced-match@npm:4.0.4"
@@ -3641,6 +3650,7 @@ __metadata:
     "@aws-sdk/client-wafv2": "npm:^3.1009.0"
     "@aws-sdk/lib-dynamodb": "npm:^3.1009.0"
     "@types/node": "npm:^25.5.0"
+    aws-cdk: "npm:^2.243.0"
     aws-cdk-lib: "npm:^2.243.0"
     commander: "npm:^14.0.3"
     constructs: "npm:^10.5.1"
@@ -3768,9 +3778,9 @@ __metadata:
   linkType: hard
 
 "picomatch@npm:^4.0.3":
-  version: 4.0.3
-  resolution: "picomatch@npm:4.0.3"
-  checksum: 10c0/9582c951e95eebee5434f59e426cddd228a7b97a0161a375aed4be244bd3fe8e3a31b846808ea14ef2c8a2527a6eeab7b3946a67d5979e81694654f939473ae2
+  version: 4.0.4
+  resolution: "picomatch@npm:4.0.4"
+  checksum: 10c0/e2c6023372cc7b5764719a5ffb9da0f8e781212fa7ca4bd0562db929df8e117460f00dff3cb7509dacfc06b86de924b247f504d0ce1806a37fac4633081466b0
   languageName: node
   linkType: hard
 
