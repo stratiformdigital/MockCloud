@@ -1,3 +1,6 @@
+import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, test, expect } from 'vitest';
 import {
   CreateStackCommand,
@@ -23,6 +26,7 @@ import {
 import {
   HeadBucketCommand,
   CreateBucketCommand,
+  GetBucketNotificationConfigurationCommand,
   PutObjectCommand,
   DeleteObjectCommand,
   DeleteBucketCommand,
@@ -39,6 +43,13 @@ async function createLambdaZip(source: string): Promise<Buffer> {
   const archive = new JSZip();
   archive.file('index.js', source);
   return archive.generateAsync({ type: 'nodebuffer' });
+}
+
+async function waitForFile(path: string): Promise<void> {
+  const deadline = Date.now() + 5000;
+  while (!existsSync(path) && Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
 }
 
 describe('CloudFormation', () => {
@@ -706,6 +717,125 @@ describe('CloudFormation', () => {
       await cf.send(new DeleteStackCommand({ StackName: stackName })).catch(() => undefined);
       await s3.send(new DeleteObjectCommand({ Bucket: bucketName, Key: objectKey })).catch(() => undefined);
       await s3.send(new DeleteBucketCommand({ Bucket: bucketName })).catch(() => undefined);
+    }
+  });
+
+  test('CloudFormation S3 bucket notifications invoke Lambda and clean up on delete', async () => {
+    const cf = createCloudFormationClient();
+    const s3 = createS3Client();
+    const timestamp = Date.now();
+    const stackName = `cf-s3-notifications-${timestamp}`;
+    const functionName = `cf-s3-notifications-fn-${timestamp}`;
+    const codeBucket = `cf-s3-notifications-code-${timestamp}`;
+    const eventBucket = `cf-s3-notifications-events-${timestamp}`;
+    const objectKey = 'code/handler.zip';
+    const markerPath = join(mkdtempSync(join(tmpdir(), 'mockcloud-s3-notif-')), 'event.json');
+    const zipBody = await createLambdaZip(`
+const { writeFileSync } = require('node:fs');
+
+exports.handler = async (event) => {
+  writeFileSync(process.env.MARKER_FILE, JSON.stringify(event));
+};
+`);
+
+    const templateBody = JSON.stringify({
+      AWSTemplateFormatVersion: '2010-09-09',
+      Resources: {
+        Fn: {
+          Type: 'AWS::Lambda::Function',
+          Properties: {
+            FunctionName: functionName,
+            Runtime: 'nodejs20.x',
+            Role: 'arn:aws:iam::000000000000:role/lambda-role',
+            Handler: 'index.handler',
+            Environment: {
+              Variables: {
+                MARKER_FILE: markerPath,
+              },
+            },
+            Code: {
+              S3Bucket: codeBucket,
+              S3Key: objectKey,
+            },
+          },
+        },
+        Permission: {
+          Type: 'AWS::Lambda::Permission',
+          Properties: {
+            Action: 'lambda:InvokeFunction',
+            FunctionName: { Ref: 'Fn' },
+            Principal: 's3.amazonaws.com',
+            SourceArn: `arn:aws:s3:::${eventBucket}`,
+          },
+        },
+        Notifications: {
+          Type: 'Custom::S3BucketNotifications',
+          DependsOn: 'Permission',
+          Properties: {
+            BucketName: eventBucket,
+            Managed: false,
+            NotificationConfiguration: {
+              LambdaFunctionConfigurations: [{
+                LambdaFunctionArn: { 'Fn::GetAtt': ['Fn', 'Arn'] },
+                Events: ['s3:ObjectCreated:Put'],
+                Filter: {
+                  Key: {
+                    FilterRules: [
+                      { Name: 'prefix', Value: 'incoming/' },
+                    ],
+                  },
+                },
+              }],
+            },
+          },
+        },
+      },
+    });
+
+    await s3.send(new CreateBucketCommand({ Bucket: codeBucket }));
+    await s3.send(new PutObjectCommand({
+      Bucket: codeBucket,
+      Key: objectKey,
+      Body: zipBody,
+      ContentType: 'application/zip',
+    }));
+    await s3.send(new CreateBucketCommand({ Bucket: eventBucket }));
+
+    try {
+      await cf.send(new CreateStackCommand({
+        StackName: stackName,
+        TemplateBody: templateBody,
+      }));
+
+      await s3.send(new PutObjectCommand({
+        Bucket: eventBucket,
+        Key: 'incoming/file.txt',
+        Body: Buffer.from('hello'),
+      }));
+
+      await waitForFile(markerPath);
+      expect(existsSync(markerPath)).toBe(true);
+      const event = JSON.parse(readFileSync(markerPath, 'utf-8'));
+      expect(event.Records?.[0]).toMatchObject({
+        eventName: 'ObjectCreated:Put',
+        s3: {
+          bucket: { name: eventBucket },
+          object: { key: 'incoming/file.txt' },
+        },
+      });
+
+      await cf.send(new DeleteStackCommand({ StackName: stackName }));
+
+      const notification = await s3.send(new GetBucketNotificationConfigurationCommand({
+        Bucket: eventBucket,
+      }));
+      expect(notification.LambdaFunctionConfigurations ?? []).toHaveLength(0);
+    } finally {
+      await cf.send(new DeleteStackCommand({ StackName: stackName })).catch(() => undefined);
+      await s3.send(new DeleteObjectCommand({ Bucket: eventBucket, Key: 'incoming/file.txt' })).catch(() => undefined);
+      await s3.send(new DeleteBucketCommand({ Bucket: eventBucket })).catch(() => undefined);
+      await s3.send(new DeleteObjectCommand({ Bucket: codeBucket, Key: objectKey })).catch(() => undefined);
+      await s3.send(new DeleteBucketCommand({ Bucket: codeBucket })).catch(() => undefined);
     }
   });
 
