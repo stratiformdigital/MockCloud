@@ -26,6 +26,22 @@ function resolveLambdaArn(identifier: string): { functionName: string; functionA
   };
 }
 
+function normalizePrincipal(value: unknown): string {
+  if (typeof value === 'string') return value;
+  if (!value || typeof value !== 'object') return '*';
+
+  const record = value as Record<string, unknown>;
+  const service = record.Service;
+  if (typeof service === 'string') return service;
+  if (Array.isArray(service) && typeof service[0] === 'string') return service[0];
+
+  const aws = record.AWS;
+  if (typeof aws === 'string') return aws;
+  if (Array.isArray(aws) && typeof aws[0] === 'string') return aws[0];
+
+  return '*';
+}
+
 export const lambdaPermissionProvider: ResourceProvider = {
   type: 'AWS::Lambda::Permission',
   create(logicalId: string, properties: Record<string, unknown>, context: ProvisionContext): ProvisionResult {
@@ -36,7 +52,7 @@ export const lambdaPermissionProvider: ResourceProvider = {
       functionName,
       functionArn,
       action: (properties.Action as string) ?? 'lambda:InvokeFunction',
-      principal: (properties.Principal as string) ?? '*',
+      principal: normalizePrincipal(properties.Principal),
       sourceArn: properties.SourceArn as string | undefined,
       sourceAccount: properties.SourceAccount as string | undefined,
       eventSourceToken: properties.EventSourceToken as string | undefined,
@@ -56,7 +72,7 @@ export const lambdaPermissionProvider: ResourceProvider = {
       functionName,
       functionArn,
       action: (properties.Action as string) ?? 'lambda:InvokeFunction',
-      principal: (properties.Principal as string) ?? '*',
+      principal: normalizePrincipal(properties.Principal),
       sourceArn: properties.SourceArn as string | undefined,
       sourceAccount: properties.SourceAccount as string | undefined,
       eventSourceToken: properties.EventSourceToken as string | undefined,

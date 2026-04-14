@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import type { ApiResponse, ParsedApiRequest } from '../../types.js';
 import { xmlResponse, errorResponse, escapeXml } from './responses.js';
 import { buckets, putObject } from './index.js';
+import { dispatchS3Notifications } from './notifications.js';
 
 const NS = 'http://s3.amazonaws.com/doc/2006-03-01/';
 
@@ -82,6 +83,7 @@ export function handleCompleteMultipartUpload(bucketName: string, objectKey: str
     metadata: {},
   });
   activeUploads.delete(uploadId);
+  dispatchS3Notifications(bucketName, objectKey, combined.length, etag, 'ObjectCreated:CompleteMultipartUpload');
 
   return xmlResponse(
     `<?xml version="1.0" encoding="UTF-8"?><CompleteMultipartUploadResult xmlns="${NS}"><Location>https://s3.amazonaws.com/${escapeXml(bucketName)}/${escapeXml(objectKey)}</Location><Bucket>${escapeXml(bucketName)}</Bucket><Key>${escapeXml(objectKey)}</Key><ETag>${escapeXml(etag)}</ETag></CompleteMultipartUploadResult>`,

@@ -2794,6 +2794,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"aws-cdk@npm:^2.243.0":
+  version: 2.1118.0
+  resolution: "aws-cdk@npm:2.1118.0"
+  bin:
+    cdk: bin/cdk
+  checksum: 10c0/38616eca00ee2d45101016506ffee26144823b0664dccfca16318735839ba2426a2f49ad47a4a3724b7a9fa6be8ea2b33d172aa80bc46eab04c2145a69487327
+  languageName: node
+  linkType: hard
+
 "balanced-match@npm:^4.0.2":
   version: 4.0.4
   resolution: "balanced-match@npm:4.0.4"
@@ -3641,6 +3650,7 @@ __metadata:
     "@aws-sdk/client-wafv2": "npm:^3.1009.0"
     "@aws-sdk/lib-dynamodb": "npm:^3.1009.0"
     "@types/node": "npm:^25.5.0"
+    aws-cdk: "npm:^2.243.0"
     aws-cdk-lib: "npm:^2.243.0"
     commander: "npm:^14.0.3"
     constructs: "npm:^10.5.1"

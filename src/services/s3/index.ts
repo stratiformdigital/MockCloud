@@ -24,6 +24,7 @@ import {
 } from './multipart.js';
 import { ServiceError } from '../response.js';
 import { REGION } from '../../config.js';
+import { dispatchS3Notifications } from './notifications.js';
 import {
   putObject,
   getObject,
@@ -326,6 +327,7 @@ function handlePutObject(bucketName: string, objectKey: string, req: ParsedApiRe
   const contentType = req.headers['content-type'] || 'application/octet-stream';
   const metadata = extractMetadata(req.headers);
   putObject(bucketName, objectKey, bodyBuf, { contentType, etag, lastModified: now, metadata });
+  dispatchS3Notifications(bucketName, objectKey, bodyBuf.length, etag, 'ObjectCreated:Put');
   return { statusCode: 200, headers: { 'Content-Type': 'application/xml', ETag: etag }, body: '' };
 }
 
@@ -349,7 +351,11 @@ function handleGetObject(bucketName: string, objectKey: string): ApiResponse {
 function handleDeleteObject(bucketName: string, objectKey: string): ApiResponse {
   const err = ensureBucket(bucketName);
   if (err) return err;
-  deleteObject(bucketName, objectKey);
+  const obj = getObjectMeta(bucketName, objectKey);
+  const deleted = deleteObject(bucketName, objectKey);
+  if (deleted && obj) {
+    dispatchS3Notifications(bucketName, objectKey, obj.size, obj.etag, 'ObjectRemoved:Delete');
+  }
   return { statusCode: 204, headers: { 'Content-Type': 'application/xml' }, body: '' };
 }
 
@@ -388,6 +394,7 @@ function handleCopyObject(bucketName: string, objectKey: string, req: ParsedApiR
     lastModified: now,
     metadata: sourceObj.metadata,
   });
+  dispatchS3Notifications(bucketName, objectKey, sourceObj.body.length, sourceObj.etag, 'ObjectCreated:Copy');
   return xmlResponse(copyObjectResultXml(sourceObj.etag, now));
 }
 
