@@ -34,6 +34,7 @@ const routes: { path: string; text?: string; component: ReturnType<typeof p> }[]
   { path: '/guardduty', text: 'GuardDuty', component: p(() => import('./pages/guardduty/malware-protection-plans')) },
   { path: '/wafv2', text: 'WAFv2', component: p(() => import('./pages/wafv2/web-acls')) },
   { path: '/wafv2/web-acls/:name/:id', component: p(() => import('./pages/wafv2/web-acl-detail')) },
+  { path: '/azure', text: 'Azure', component: p(() => import('./pages/azure')) },
 ];
 
 const navItems = routes

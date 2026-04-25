@@ -121,4 +121,6 @@ export async function clearAllState(): Promise<void> {
   allMaps.clear();
   const { clearS3Storage } = await import('../services/s3/storage.js');
   clearS3Storage();
+  const { clearAzureBlobStorage } = await import('../azure/services/blob-storage/storage.js');
+  clearAzureBlobStorage();
 }

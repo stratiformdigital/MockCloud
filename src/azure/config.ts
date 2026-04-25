@@ -1,0 +1,10 @@
+export const SUBSCRIPTION_ID = '00000000-0000-0000-0000-000000000000';
+export const TENANT_ID = '00000000-0000-0000-0000-000000000000';
+export const LOCATION = 'eastus';
+export const STORAGE_ACCOUNT = 'mockcloud';
+export const KEY_VAULT_NAME = 'mockvault';
+export const COSMOS_ACCOUNT = 'mockcosmos';
+export const APP_CONFIG_ACCOUNT = 'mockconfig';
+export const FUNCTION_APP_NAME = 'mockfunc';
+export const EVENT_GRID_TOPIC = 'mocktopic';
+export const API_MANAGEMENT_SERVICE = 'mockapim';

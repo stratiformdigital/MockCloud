@@ -8,6 +8,7 @@ import { getAllMockServices } from './services/registry.js';
 import { debug, info } from './util/logger.js';
 import { handleApiGatewayRequest } from './services/apigateway/request-handler.js';
 import { cfnResponses } from './services/cloudformation/engine/providers/custom-resource.js';
+import { handleAzureRequest, isAzureRequest } from './azure/router.js';
 
 
 function extractSigningService(authHeader: string): string | null {
@@ -82,6 +83,11 @@ export function createRouter(
     }
 
     const hostHeader = ((req.headers[':authority'] as string) ?? req.headers.host ?? '').split(':')[0];
+    if (isAzureRequest(req, url, hostHeader)) {
+      await handleAzureRequest(req, res);
+      return;
+    }
+
     if (hostHeader.includes('.execute-api.')) {
       await handleApiGatewayRequest(req, res);
       return;

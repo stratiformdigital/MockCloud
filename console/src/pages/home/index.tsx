@@ -21,6 +21,27 @@ import {
   apigateway, ssm, kms, logs, eventbridge, ec2,
   secretsmanager, wafv2, ENDPOINT,
 } from '../../api/clients';
+import {
+  listAzureAppConfigSettings,
+  listAzureApiManagementApis,
+  listAzureContainers,
+  listAzureCosmosDatabases,
+  listAzureDefenderPlans,
+  listAzureEventGridEvents,
+  listAzureFunctions,
+  listAzureGraphApplications,
+  listAzureGraphGroups,
+  listAzureGraphServicePrincipals,
+  listAzureGraphUsers,
+  listAzureKeys,
+  listAzureManagedIdentities,
+  listAzureMonitorTables,
+  listAzureNetworkSecurityGroups,
+  listAzureResourceGroups,
+  listAzureRoleAssignments,
+  listAzureSecrets,
+  listAzureWafPolicies,
+} from '../../api/azure';
 
 interface ServiceCard {
   name: string;
@@ -166,6 +187,34 @@ const SERVICES: { name: string; href: string; fetch: () => Promise<number> }[] =
       const res = await fetch(`${ENDPOINT}/api/guardduty.us-east-1.amazonaws.com/malware-protection-plan`);
       const data = await res.json();
       return data.MalwareProtectionPlans?.length ?? 0;
+    },
+  },
+  {
+    name: 'Azure',
+    href: '/azure',
+    fetch: async () => {
+      const [containers, secrets, keys, resourceGroups, cosmosDatabases, appConfigSettings, functions, eventGridEvents, apiManagementApis, networkSecurityGroups, monitorTables, wafPolicies, defenderPlans, managedIdentities, roleAssignments, graphUsers, graphGroups, graphApplications, graphServicePrincipals] = await Promise.all([
+        listAzureContainers(),
+        listAzureSecrets(),
+        listAzureKeys(),
+        listAzureResourceGroups(),
+        listAzureCosmosDatabases(),
+        listAzureAppConfigSettings(),
+        listAzureFunctions(),
+        listAzureEventGridEvents(),
+        listAzureApiManagementApis(),
+        listAzureNetworkSecurityGroups(),
+        listAzureMonitorTables(),
+        listAzureWafPolicies(),
+        listAzureDefenderPlans(),
+        listAzureManagedIdentities(),
+        listAzureRoleAssignments(),
+        listAzureGraphUsers(),
+        listAzureGraphGroups(),
+        listAzureGraphApplications(),
+        listAzureGraphServicePrincipals(),
+      ]);
+      return containers.length + secrets.length + keys.length + resourceGroups.length + cosmosDatabases.length + appConfigSettings.length + functions.length + eventGridEvents.length + apiManagementApis.length + networkSecurityGroups.length + monitorTables.length + wafPolicies.length + defenderPlans.length + managedIdentities.length + roleAssignments.length + graphUsers.length + graphGroups.length + graphApplications.length + graphServicePrincipals.length;
     },
   },
 ];

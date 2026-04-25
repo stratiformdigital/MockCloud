@@ -8,6 +8,8 @@ export type Middleware = (
 
 export interface ServerConfig {
   port: number;
+  azureHttpsPort?: number;
+  serviceBusPort: number;
   region: string;
   verbose: boolean;
 }
@@ -23,6 +25,15 @@ export interface MockServiceDefinition {
 
 export type ApiHandler = (req: ParsedApiRequest) => ApiResponse | Promise<ApiResponse>;
 
+export interface AzureServiceDefinition {
+  name: string;
+  hostPatterns: string[];
+  pathPatterns?: string[];
+  handlers: Record<string, AzureHandler>;
+}
+
+export type AzureHandler = (req: AzureParsedRequest) => ApiResponse | Promise<ApiResponse>;
+
 export interface ParsedApiRequest {
   action: string;
   body: Record<string, any>;
@@ -33,10 +44,18 @@ export interface ParsedApiRequest {
   method: string;
 }
 
+export interface AzureParsedRequest extends ParsedApiRequest {
+  apiVersion: string;
+  azureHost: string;
+  azurePath: string;
+  subscriptionId?: string;
+  resourceGroup?: string;
+  provider?: string;
+}
+
 export interface ApiResponse {
   statusCode: number;
   headers?: Record<string, string>;
   body: string;
   bodyBuffer?: Buffer;
 }
-

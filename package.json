@@ -43,6 +43,7 @@
     "commander": "^14.0.3",
     "dotenv": "^17.2.3",
     "jszip": "^3.10.1",
+    "rhea": "^3.0.4",
     "yaml": "^2.8.2"
   },
   "devDependencies": {
@@ -61,6 +62,14 @@
     "@aws-sdk/client-ssm": "^3.1009.0",
     "@aws-sdk/client-sts": "^3.1009.0",
     "@aws-sdk/client-wafv2": "^3.1009.0",
+    "@azure/app-configuration": "^1.11.0",
+    "@azure/arm-resources": "^7.0.0",
+    "@azure/core-auth": "^1.10.1",
+    "@azure/cosmos": "^4.9.2",
+    "@azure/eventgrid": "^5.12.0",
+    "@azure/keyvault-keys": "^4.10.0",
+    "@azure/keyvault-secrets": "^4.11.1",
+    "@azure/storage-blob": "^12.31.0",
     "@types/node": "^25.5.0",
     "aws-cdk": "^2.243.0",
     "aws-cdk-lib": "^2.243.0",

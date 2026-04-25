@@ -55,7 +55,7 @@ case "${1:-start}" in
     echo "  reset   Clear all data and stop server"
     echo "  clear   Clear persisted state"
     echo "  serve   Start server in foreground"
-    echo "  env     Print AWS environment variables"
+    echo "  env     Print environment variables"
     echo ""
     echo "  rhtp    Run MDCT RHTP application"
     echo "  hcbs    Run MDCT HCBS application"
