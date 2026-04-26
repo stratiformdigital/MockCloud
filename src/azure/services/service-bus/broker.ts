@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import rhea from 'rhea';
-import type { Container, EventContext, Sender, Message } from 'rhea';
+import type { Connection, Container, EventContext, Sender, Message } from 'rhea';
 import { info } from '../../../util/logger.js';
 
 const { create_container } = rhea;
@@ -29,6 +29,17 @@ function getOrCreateQueue(address: string): QueueState {
     queues.set(address, queue);
   }
   return queue;
+}
+
+function getConnectionNamespace(connection: Connection | undefined): string {
+  if (!connection) return '';
+  const hostname = connection.hostname ?? '';
+  const match = hostname.match(/^([^.]+)\.servicebus/i);
+  return match ? match[1] : '';
+}
+
+function qualifyAddress(namespace: string, address: string): string {
+  return namespace ? `${namespace}/${address}` : address;
 }
 
 function deliverIfPossible(address: string): void {
@@ -84,8 +95,7 @@ function handleCbsMessage(context: EventContext): void {
   if (!connection) return;
   const correlationId = context.message?.correlation_id ?? context.message?.message_id ?? randomUUID();
   const replyLink = cbsReplyLinks.get(connection);
-  // eslint-disable-next-line no-console
-  console.log(`[servicebus] CBS request: op=${(context.message?.application_properties as Record<string, unknown> | undefined)?.operation} corrId=${correlationId} haveLink=${!!replyLink} sendable=${replyLink?.sendable()}`);
+  info(`[servicebus] CBS request: op=${(context.message?.application_properties as Record<string, unknown> | undefined)?.operation} corrId=${correlationId} haveLink=${!!replyLink} sendable=${replyLink?.sendable()}`);
   const response: Message = {
     correlation_id: correlationId,
     application_properties: {
@@ -117,26 +127,26 @@ export function createServiceBusBroker(): Container {
     const sender = context.sender;
     if (!sender) return;
     const address = resolveSourceAddress(sender);
-    // eslint-disable-next-line no-console
-    console.log(`[servicebus] sender_open address=${address ?? '<none>'}`);
+    info(`[servicebus] sender_open address=${address ?? '<none>'}`);
     if (isCbsAddress(address)) {
       if (context.connection) cbsReplyLinks.set(context.connection, sender);
       return;
     }
     if (!address) return;
-    const queue = getOrCreateQueue(address);
+    const namespace = getConnectionNamespace(context.connection);
+    const qualified = qualifyAddress(namespace, address);
+    const queue = getOrCreateQueue(qualified);
     queue.subscribers.add(sender);
-    subscriberAddresses.set(sender, address);
-    info(`[servicebus] subscriber attached to ${address} (queued=${queue.messages.length})`);
-    deliverIfPossible(address);
+    subscriberAddresses.set(sender, qualified);
+    info(`[servicebus] subscriber attached to ${qualified} (queued=${queue.messages.length})`);
+    deliverIfPossible(qualified);
   });
 
   container.on('receiver_open', (context: EventContext) => {
     const receiver = context.receiver;
     if (!receiver) return;
     const address = resolveTargetAddress(context);
-    // eslint-disable-next-line no-console
-    console.log(`[servicebus] receiver_open address=${address ?? '<none>'}`);
+    info(`[servicebus] receiver_open address=${address ?? '<none>'}`);
     if (isCbsAddress(address)) return;
     receiver.add_credit(128);
   });
@@ -154,8 +164,8 @@ export function createServiceBusBroker(): Container {
   container.on('sendable', (context: EventContext) => {
     const sender = context.sender;
     if (!sender) return;
-    const address = resolveSourceAddress(sender);
-    if (!address || isCbsAddress(address)) return;
+    const address = subscriberAddresses.get(sender);
+    if (!address) return;
     deliverIfPossible(address);
   });
 
@@ -183,10 +193,12 @@ export function createServiceBusBroker(): Container {
       applicationProperties: message.application_properties as Record<string, unknown> | undefined,
       enqueuedAt: Date.now(),
     };
-    const queue = getOrCreateQueue(targetAddress);
+    const namespace = getConnectionNamespace(context.connection);
+    const qualified = qualifyAddress(namespace, targetAddress);
+    const queue = getOrCreateQueue(qualified);
     queue.messages.push(queueMessage);
     context.delivery?.accept();
-    deliverIfPossible(targetAddress);
+    deliverIfPossible(qualified);
   });
 
   container.sasl_server_mechanisms.enable_anonymous();

@@ -42,7 +42,7 @@ function isMatchingSubscription(
     return false;
   }
   if (!subscriptionScope && subscriptionId && !subscriptionId.toLowerCase().includes(scopeIdShortName(scopeId))) {
-    return true;
+    return false;
   }
   return true;
 }
@@ -59,8 +59,10 @@ function deliverToServiceBus(destination: Record<string, unknown>, event: EventG
   const queueMatch = resourceId.match(/\/queues\/([^/]+)$/i);
   if (!queueMatch) return;
   const queueName = queueMatch[1];
-  enqueueServiceBusMessage(queueName, [event]);
-  info(`[eventgrid] delivered ${event.eventType} to service bus queue ${queueName}`);
+  const nsMatch = resourceId.match(/\/namespaces\/([^/]+)\//i);
+  const address = nsMatch ? `${nsMatch[1]}/${queueName}` : queueName;
+  enqueueServiceBusMessage(address, [event]);
+  info(`[eventgrid] delivered ${event.eventType} to service bus queue ${address}`);
 }
 
 export function publishBlobCreated(
