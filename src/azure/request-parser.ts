@@ -57,7 +57,7 @@ function extractArmSegments(pathname: string): Pick<AzureParsedRequest, 'subscri
   return result;
 }
 
-export async function parseAzureRequest(req: IncomingMessage): Promise<AzureParsedRequest> {
+export async function parseAzureRequest(req: IncomingMessage, azureHttpsPort?: number): Promise<AzureParsedRequest> {
   const rawBody = await readBodyBuffer(req);
   const rawBodyStr = rawBody.toString('utf-8');
   const url = new URL(req.url ?? '/', `http://${req.headers.host}`);
@@ -94,6 +94,7 @@ export async function parseAzureRequest(req: IncomingMessage): Promise<AzurePars
     apiVersion: queryParams['api-version'] ?? '',
     azureHost,
     azurePath,
+    azureHttpsPort,
     ...extractArmSegments(azurePath),
   };
 }

@@ -96,4 +96,24 @@ describe('Azure Cognitive Services', () => {
     expect(Array.isArray(response.results.documents[0].entities)).toBe(true);
     expect(response.results.documents[0].entities.length).toBeGreaterThan(0);
   });
+
+  test('direct path prefixes still route without an embedded Azure host', async () => {
+    const endpoint = getTestEndpoint();
+    const response = await json<Record<string, any>>(
+      await fetch(`${endpoint}/language/:analyze-text?api-version=${languageApi}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: 'KeyPhraseExtraction',
+          parameters: { modelVersion: 'latest' },
+          analysisInput: {
+            documents: [{ id: '1', language: 'en', text: 'government contract modification number mockvendor' }],
+          },
+        }),
+      }),
+    );
+
+    expect(response.results.documents[0].id).toBe('1');
+    expect(Array.isArray(response.results.documents[0].keyPhrases)).toBe(true);
+  });
 });

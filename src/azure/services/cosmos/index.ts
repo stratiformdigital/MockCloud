@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto';
 import type { ApiResponse, AzureParsedRequest, AzureServiceDefinition } from '../../../types.js';
+import { requestProtocol } from '../../request-url.js';
 import { PersistentMap } from '../../../state/store.js';
 import { COSMOS_ACCOUNT } from '../../config.js';
 
@@ -579,9 +580,7 @@ function listPartitionKeyRanges(account: string, databaseId: string, containerId
 function databaseAccount(req: AzureParsedRequest): ApiResponse {
   const requestHost = req.headers.host ?? req.azureHost;
   const proxyPrefix = req.path.startsWith('/azure/') ? `/azure/${req.azureHost}` : '';
-  const isHttps =
-    req.headers['x-forwarded-proto'] === 'https' || requestHost.endsWith(':4445');
-  const endpoint = `${isHttps ? 'https' : 'http'}://${requestHost}${proxyPrefix}`;
+  const endpoint = `${requestProtocol(req)}://${requestHost}${proxyPrefix}`;
   return jsonResponse({
     id: accountName(req),
     _self: '',

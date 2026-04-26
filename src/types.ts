@@ -48,6 +48,7 @@ export interface AzureParsedRequest extends ParsedApiRequest {
   apiVersion: string;
   azureHost: string;
   azurePath: string;
+  azureHttpsPort?: number;
   subscriptionId?: string;
   resourceGroup?: string;
   provider?: string;

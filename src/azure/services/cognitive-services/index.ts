@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { ApiResponse, AzureParsedRequest, AzureServiceDefinition } from '../../../types.js';
+import { requestProtocol } from '../../request-url.js';
 import { PersistentMap } from '../../../state/store.js';
 
 interface AnalyzeResult {
@@ -30,7 +31,7 @@ function cognitiveError(code: string, message: string, statusCode = 400): ApiRes
 
 function proxyBaseUrl(req: AzureParsedRequest): string {
   const host = req.headers.host ?? 'localhost:4444';
-  const proto = req.headers['x-forwarded-proto'] ?? (host.includes('4445') ? 'https' : 'http');
+  const proto = requestProtocol(req);
   return `${proto}://${host}`;
 }
 

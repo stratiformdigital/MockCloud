@@ -83,8 +83,8 @@ export function createRouter(
     }
 
     const hostHeader = ((req.headers[':authority'] as string) ?? req.headers.host ?? '').split(':')[0];
-    if (isAzureRequest(req, url, hostHeader)) {
-      await handleAzureRequest(req, res);
+    if (isAzureRequest(url, hostHeader)) {
+      await handleAzureRequest(req, res, config.azureHttpsPort);
       return;
     }
 

@@ -10,27 +10,24 @@ import { debug, info } from '../util/logger.js';
 const services = getAllAzureServices();
 const resolveAzure = createAzureResolver(services);
 
-function embeddedProxyHost(pathname: string): string | null {
-  const match = pathname.match(/^\/(?:azure|api)\/([^/]+)/);
-  return match ? match[1] : null;
-}
-
 const AZURE_PATH_PREFIXES = [
   '/documentintelligence/',
   '/formrecognizer/',
   '/language/',
 ];
 
-export function isAzureRequest(req: IncomingMessage, url: URL, hostHeader: string): boolean {
+function embeddedProxyHost(pathname: string): string | null {
+  const match = pathname.match(/^\/(?:azure|api)\/([^/]+)/);
+  return match ? match[1] : null;
+}
+
+export function isAzureRequest(url: URL, hostHeader: string): boolean {
   if (url.pathname.startsWith('/azure/')) return true;
   if (AZURE_PATH_PREFIXES.some((prefix) => url.pathname.toLowerCase().startsWith(prefix))) return true;
 
   const proxyHost = embeddedProxyHost(url.pathname);
   if (proxyHost && isAzureHost(proxyHost)) return true;
-  if (isAzureHost(hostHeader)) return true;
-
-  const authHeader = typeof req.headers.authorization === 'string' ? req.headers.authorization : '';
-  return authHeader.startsWith('Bearer ') && url.searchParams.has('api-version');
+  return isAzureHost(hostHeader);
 }
 
 async function dispatchHandler(
@@ -60,9 +57,13 @@ async function dispatchHandler(
   res.end(response.bodyBuffer ?? response.body);
 }
 
-export async function handleAzureRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
+export async function handleAzureRequest(
+  req: IncomingMessage,
+  res: ServerResponse,
+  azureHttpsPort?: number,
+): Promise<void> {
   applyAzureHeaders(res);
-  const parsed = await parseAzureRequest(req);
+  const parsed = await parseAzureRequest(req, azureHttpsPort);
   const service = resolveAzure(parsed);
 
   if (!service) {

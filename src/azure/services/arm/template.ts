@@ -50,6 +50,7 @@ interface EvalContext {
   resourceGroupName?: string;
   deploymentName: string;
   location: string;
+  azureHttpsPort: number;
   parameters: Record<string, unknown>;
   variableDefs: Record<string, unknown>;
   variableCache: Map<string, unknown>;
@@ -57,6 +58,8 @@ interface EvalContext {
   resourcesById: Map<string, ArmTemplateResource>;
   copyIndexes: Map<string, number>;
 }
+
+const DEFAULT_AZURE_HTTPS_PORT = 4445;
 
 interface NormalizedResource {
   logicalId: string;
@@ -381,7 +384,7 @@ class ExpressionParser {
             keyvaultDns: 'vault.azure.net',
           },
           authentication: {
-            loginEndpoint: 'https://localhost:4445/azure/login.microsoftonline.com/',
+            loginEndpoint: `https://localhost:${this.context.azureHttpsPort}/azure/login.microsoftonline.com/`,
           },
         };
       case 'resourceid':
@@ -473,7 +476,7 @@ class ExpressionParser {
       return {
         ...base,
         InstrumentationKey: stableGuid(`${resource.id}:ikey`),
-        ConnectionString: `InstrumentationKey=${stableGuid(`${resource.id}:ikey`)};IngestionEndpoint=https://localhost:4445/azure/monitor.azure.com/`,
+        ConnectionString: `InstrumentationKey=${stableGuid(`${resource.id}:ikey`)};IngestionEndpoint=https://localhost:${this.context.azureHttpsPort}/azure/monitor.azure.com/`,
       };
     }
     if (type === 'microsoft.keyvault/vaults') {
@@ -759,6 +762,7 @@ function templateResourceFromDefinition(
       subscriptionId: context.subscriptionId,
       resourceGroupName,
       location,
+      azureHttpsPort: context.azureHttpsPort,
     });
     resource.properties = {
       provisioningState: 'Succeeded',
@@ -790,6 +794,7 @@ export function provisionArmTemplate(input: {
   subscriptionId?: string;
   resourceGroupName?: string;
   location?: string;
+  azureHttpsPort?: number;
 }): ArmTemplateProvisionResult {
   const subscriptionId = input.subscriptionId ?? SUBSCRIPTION_ID;
   const location = input.location ?? LOCATION;
@@ -798,6 +803,7 @@ export function provisionArmTemplate(input: {
     resourceGroupName: input.resourceGroupName,
     deploymentName: input.deploymentName,
     location,
+    azureHttpsPort: input.azureHttpsPort ?? DEFAULT_AZURE_HTTPS_PORT,
   };
   const parameters = buildParameterValues(input.template, input.parameters, seed);
   const context: EvalContext = {

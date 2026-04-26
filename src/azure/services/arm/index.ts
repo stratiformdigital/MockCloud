@@ -614,6 +614,7 @@ function createOrUpdateDeployment(req: AzureParsedRequest, target: { id: string;
       subscriptionId,
       resourceGroupName: target.resourceGroupName,
       location: LOCATION,
+      azureHttpsPort: req.azureHttpsPort,
     });
   } catch (err) {
     return azureError('InvalidTemplateDeployment', err instanceof Error ? err.message : String(err), 400);
@@ -675,6 +676,7 @@ function validateDeployment(req: AzureParsedRequest): ApiResponse {
       subscriptionId: req.subscriptionId ?? SUBSCRIPTION_ID,
       resourceGroupName: target.resourceGroupName,
       location: LOCATION,
+      azureHttpsPort: req.azureHttpsPort,
     });
   } catch (err) {
     return azureError('InvalidTemplateDeployment', err instanceof Error ? err.message : String(err), 400);

@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import type { ApiResponse, AzureParsedRequest, AzureServiceDefinition } from '../../../types.js';
 import { PersistentMap } from '../../../state/store.js';
 import { FUNCTION_APP_NAME, LOCATION, SUBSCRIPTION_ID } from '../../config.js';
+import { requestProtocol } from '../../request-url.js';
 
 interface AzureFunctionApp {
   id: string;
@@ -173,7 +174,7 @@ export function deleteFunctionFromArm(appName: string, functionName: string): vo
 
 function functionEnvelope(definition: AzureFunctionDefinition, req?: AzureParsedRequest): Record<string, unknown> {
   const appName = definition.appName;
-  const invokeUrlTemplate = `${req?.headers['x-forwarded-proto'] ?? 'http'}://${req?.headers.host ?? `${appName}.azurewebsites.net`}/azure/${appName}.azurewebsites.net/api/${definition.name}`;
+  const invokeUrlTemplate = `${req ? requestProtocol(req) : 'http'}://${req?.headers.host ?? `${appName}.azurewebsites.net`}/azure/${appName}.azurewebsites.net/api/${definition.name}`;
   return {
     id: definition.id,
     name: definition.name,

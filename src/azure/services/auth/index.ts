@@ -1,4 +1,5 @@
 import type { ApiResponse, AzureParsedRequest, AzureServiceDefinition } from '../../../types.js';
+import { configuredAzureHttpsPort, requestProtocol } from '../../request-url.js';
 import { jsonOk, azureError } from '../../response.js';
 
 function tokenResponse(): ApiResponse {
@@ -13,7 +14,7 @@ function tokenResponse(): ApiResponse {
 
 function authorityBase(req: AzureParsedRequest): string {
   const host = req.headers.host ?? req.azureHost;
-  const protocol = req.headers['x-forwarded-proto'] ?? 'http';
+  const protocol = requestProtocol(req);
   return `${protocol}://${host}/azure/login.microsoftonline.com`;
 }
 
@@ -56,7 +57,7 @@ function instanceDiscovery(req: AzureParsedRequest): ApiResponse {
           host,
           'localhost',
           'localhost:4444',
-          'localhost:4445',
+          `localhost:${configuredAzureHttpsPort(req)}`,
         ],
       },
     ],
